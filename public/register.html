@@ -24,29 +24,50 @@
     <div class="card form">
       <h2>Formulario de registro</h2>
 
+      <form id="regForm">
+        <div class="grid2">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" required>
+          </div>
+          <div class="form-group">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" name="apellido" type="text" required>
+          </div>
+        </div>
 
-      <form id="regForm" action="../api/auth_register.php" method="post">
         <div class="grid2">
-          <input name="nombre" placeholder="Nombre" required>
-          <input name="apellido" placeholder="Apellido" required>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+          <div class="form-group">
+            <label for="telefono">Número telefónico</label>
+            <input id="telefono" name="telefono" type="tel">
+          </div>
         </div>
+
         <div class="grid2">
-          <input name="email" type="email" placeholder="E-mail" required>
-          <input name="telefono" placeholder="Número telefónico">
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm_password">Confirma tu contraseña</label>
+            <input id="confirm_password" name="confirm_password" type="password" required>
+          </div>
         </div>
-        <div class="grid2">
-          <input name="password" type="password" placeholder="Contraseña" required>
-          <input name="confirm_password" type="password" placeholder="Confirma tu contraseña" required>
+
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input id="direccion" name="direccion" type="text">
         </div>
-        <input name="direccion" placeholder="Dirección">
-        <!-- fallback si no hay JS -->
-        <input type="hidden" name="redirect" value="/elperrito/public/login.html">
-        <button class="btn primary">Registrarse</button>
+
+        <button class="btn primary" type="submit">Registrarse</button>
       </form>
+
       <p>¿Ya tienes una cuenta? <a href="login.html">inicia sesión</a></p>
       <p id="msg"></p>
-
-
     </div>
   </div>
 
