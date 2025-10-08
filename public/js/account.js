@@ -9,9 +9,18 @@ document.getElementById('tile-history').onclick = async (e) => {
     data.forEach(o => {
         const li = document.createElement('li');
         const d = new Date(o.fecha.replace(' ', 'T'));
-        li.textContent = `#${o.id_venta} — ${d.toLocaleDateString()} — $${Number(o.total).toFixed(2)} — ${o.resumen}`;
+        li.textContent = `#${o.id_venta} — ${d.toLocaleDateDateString()} — $${Number(o.total).toFixed(2)} — ${o.resumen}`;
         ul.append(li);
     });
     drawer.innerHTML = ''; drawer.append(ul);
 };
 
+document.getElementById('tile-logout').onclick = async (e) => {
+    e.preventDefault();
+    const r = await fetch('../api/auth_logout.php', { method: 'POST', credentials: 'include' });
+    if (r.ok) {
+        location.href = 'index.html';
+    } else {
+        alert('Error al cerrar sesión');
+    }
+};
