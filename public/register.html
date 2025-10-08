@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>El Perrito — Registro</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg">
+
+  <header class="header">
+    <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a class="disabled" href="#">Promociones</a>
+      <a href="cart.html">Carrito</a>
+      <a id="accountLink" href="login.html">Cuenta</a>
+    </nav>
+  </header>
+
+  <div class="center container">
+    <div class="card form">
+      <h2>Formulario de registro</h2>
+
+
+      <form id="regForm" action="../api/auth_register.php" method="post">
+        <div class="grid2">
+          <input name="nombre" placeholder="Nombre" required>
+          <input name="apellido" placeholder="Apellido" required>
+        </div>
+        <div class="grid2">
+          <input name="email" type="email" placeholder="E-mail" required>
+          <input name="telefono" placeholder="Número telefónico">
+        </div>
+        <div class="grid2">
+          <input name="password" type="password" placeholder="Contraseña" required>
+          <input name="confirm_password" type="password" placeholder="Confirma tu contraseña" required>
+        </div>
+        <input name="direccion" placeholder="Dirección">
+        <!-- fallback si no hay JS -->
+        <input type="hidden" name="redirect" value="/elperrito/public/login.html">
+        <button class="btn primary">Registrarse</button>
+      </form>
+      <p>¿Ya tienes una cuenta? <a href="login.html">inicia sesión</a></p>
+      <p id="msg"></p>
+
+
+    </div>
+  </div>
+
+  <script src="js/header.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+
+</html>

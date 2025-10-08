@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>El Perrito — Inicio</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg">
+  <!-- header -->
+  <header class="header">
+    <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a class="disabled" href="#">Promociones</a>
+      <a href="cart.html">Carrito</a>
+      <a id="accountLink" href="login.html">Cuenta</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <div class="searchrow">
+        <input id="q" type="text" placeholder="Búsqueda">
+        <button id="btnBuscar" class="btn primary">Buscar</button>
+        <button id="btnClear" class="btn outline">Borrar</button>
+        <div class="pop">
+          <button id="btnFiltros" class="btn outline">Filtros</button>
+          <div id="panelFiltros" class="pop-panel" style="display:none">
+            <strong>Categorías</strong>
+            <ul id="listaCategorias"></ul>
+          </div>
+        </div>
+        <div class="pop">
+          <button id="btnHist" class="btn outline">Historial</button>
+          <div id="panelHist" class="pop-panel" style="display:none">
+            <ul id="histList"></ul>
+          </div>
+        </div>
+      </div>
+      <div id="grid" class="grid"></div>
+    </div>
+  </div>
+  <script src="js/header.js"></script>
+  <script src="js/home.js"></script>
+</body>
+
+</html>

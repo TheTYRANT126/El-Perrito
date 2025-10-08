@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>El Perrito — Carrito</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg">
+  <header class="header">
+    <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a class="disabled" href="#">Promociones</a>
+      <a href="cart.html">Carrito</a>
+      <a id="accountLink" href="login.html">Cuenta</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1 style="color:#2c5db5; font-size:48px; margin-top:0">Carrito</h1>
+    <div class="cart-layout">
+      <div class="cart-table">
+        <div class="th">
+          <div>Producto</div>
+          <div>Cantidad</div>
+          <div>Precio</div>
+        </div>
+        <div id="rows"></div>
+      </div>
+      <div class="summary">
+        <h3>Subtotal</h3>
+        <div id="subinfo"><small class="muted">(0 productos): $0.00</small></div>
+        <button id="pay" class="btn success" style="margin-top:12px">Proceder al pago</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/header.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+
+</html>

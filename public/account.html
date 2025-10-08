@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Mi cuenta</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="index.html">Inicio</a>
+            <a class="disabled" href="#">Promociones</a>
+            <a href="cart.html">Carrito</a>
+            <a id="accountLink" href="login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 style="color:#2c5db5; font-size:48px; margin:0 0 12px 0">Mi cuenta</h1>
+        <div class="account-grid">
+            <a class="tile" href="#" id="tile-history">Historial de compras</a>
+            <a class="tile" href="#">Tarjetas</a>
+            <a class="tile" href="#">Dirección de envío</a>
+            <a class="tile" href="#" id="tile-profile">Cambiar datos</a>
+            <a class="tile" href="#" id="tile-delete">Eliminar cuenta</a>
+        </div>
+        <div id="drawer" class="card" style="margin-top:20px; display:none"></div>
+    </div>
+    <script src="js/header.js"></script>
+    <script src="js/account.js"></script>
+</body>
+
+</html>
