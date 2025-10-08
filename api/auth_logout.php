@@ -1,26 +1,22 @@
-﻿// public/js/account.js
-const drawer = document.getElementById('drawer');
-document.getElementById('tile-history').onclick = async (e) => {
-    e.preventDefault();
-    const data = await (await fetch('../api/orders_list.php', { credentials: 'include' })).json();
-    drawer.style.display = 'block';
-    if (!Array.isArray(data) || data.length === 0) { drawer.innerHTML = '<small class="muted">Sin compras aún.</small>'; return; }
-    const ul = document.createElement('ul');
-    data.forEach(o => {
-        const li = document.createElement('li');
-        const d = new Date(o.fecha.replace(' ', 'T'));
-        li.textContent = `#${o.id_venta} — ${d.toLocaleDateDateString()} — $${Number(o.total).toFixed(2)} — ${o.resumen}`;
-        ul.append(li);
-    });
-    drawer.innerHTML = ''; drawer.append(ul);
-};
+﻿<?php
+// api/auth_logout.php
+require_once __DIR__ . '/../lib/session.php';
 
-document.getElementById('tile-logout').onclick = async (e) => {
-    e.preventDefault();
-    const r = await fetch('../api/auth_logout.php', { method: 'POST', credentials: 'include' });
-    if (r.ok) {
-        location.href = 'index.html';
-    } else {
-        alert('Error al cerrar sesión');
-    }
-};
+// Destruir todas las variables de sesión
+$_SESSION = array();
+
+// Destruir la cookie de sesión
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
+
+// Destruir la sesión
+session_destroy();
+
+// Responder con éxito
+http_response_code(200);
+echo "OK";
