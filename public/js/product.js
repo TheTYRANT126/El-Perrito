@@ -1,4 +1,4 @@
-﻿function qs(k) { return new URLSearchParams(location.search).get(k); }
+function qs(k) { return new URLSearchParams(location.search).get(k); }
 async function load() {
     const id = qs('id');
     const data = await (await fetch('../api/product_detail.php?id=' + id)).json();

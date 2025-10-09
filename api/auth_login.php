@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // IMPORTANTE: No debe haber NADA antes de <?php, ni espacios ni líneas vacías
 ob_start(); // Iniciamos buffer de salida
 require_once __DIR__ . '/../lib/session.php';

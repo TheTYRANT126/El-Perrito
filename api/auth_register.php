@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // IMPORTANTE: Asegúrate de que no hay espacios o líneas antes de <?php
 require_once __DIR__ . '/../lib/db.php';
 

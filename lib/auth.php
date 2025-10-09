@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once __DIR__.'/session.php';
 function require_login_cliente(){
   if (!isset($_SESSION['cliente_id'])) {

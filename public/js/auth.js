@@ -1,4 +1,4 @@
-﻿const loginForm = document.getElementById('loginForm');
+const loginForm = document.getElementById('loginForm');
 const regForm = document.getElementById('regForm');
 const msg = document.getElementById('msg');
 
