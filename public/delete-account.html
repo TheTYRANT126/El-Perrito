@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Eliminar Cuenta</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="index.html">Inicio</a>
+            <a class="disabled" href="#">Promociones</a>
+            <a href="cart.html">Carrito</a>
+            <a id="accountLink" href="account.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="card" style="max-width: 600px; margin: 40px auto;">
+            <h1 style="color:#d00000; font-size:36px; margin-top:0; text-align: center;">Eliminar Cuenta</h1>
+
+            <div style="background: #fff3cd; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                <h3 style="margin: 0 0 8px 0; color: #856404;">Esta acción es permanente</h3>
+                <ul style="margin: 8px 0; padding-left: 20px; color: #856404;">
+                    <li>Se eliminarán todos tus datos personales</li>
+                    <li>Se perderá tu historial de compras</li>
+                    <li>No podrás recuperar tu cuenta</li>
+                    <li>Esta acción no se puede deshacer</li>
+                </ul>
+            </div>
+
+            <div id="user-info" style="background: #f3f4f6; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                <p style="margin: 0; color: #64748b;">Estás a punto de eliminar la cuenta:</p>
+                <p id="user-email" style="margin: 8px 0 0 0; font-weight: 700; font-size: 18px; color: #0f172a;"></p>
+            </div>
+
+            <form id="deleteForm">
+                <div class="form-group">
+                    <label for="password" style="font-weight: 600;">Para confirmar, ingresa tu contraseña</label>
+                    <input id="password" name="password" type="password" placeholder="Contraseña actual" required
+                        style="margin-top: 8px;">
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                        <input type="checkbox" id="confirm-delete" required>
+                        <span style="font-size: 14px;">Entiendo que esta acción es permanente y no se puede
+                            deshacer</span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 32px;">
+                    <a href="account.html" class="btn outline"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; text-decoration: none;">Cancelar</a>
+                    <button class="btn" type="submit"
+                        style="flex: 1; background: #d00000; color: #fff; font-weight: 700;">Eliminar Mi Cuenta</button>
+                </div>
+            </form>
+
+            <p id="msg" style="margin-top: 16px; text-align: center; font-weight: 600;"></p>
+        </div>
+    </div>
+
+    <script src="js/header.js"></script>
+    <script src="js/delete-account.js"></script>
+</body>
+
+</html>

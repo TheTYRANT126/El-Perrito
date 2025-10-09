@@ -315,13 +315,16 @@ small.muted {
   border-radius: 20px;
   padding: 20px;
   box-shadow: var(--shadow);
-  text-align: center
+  text-align: center;
+  height: fit-content;
+  /* <-- Add this line */
 }
 
 .account-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 24px
+  gap: 24px;
+  margin-top: 30px;
 }
 
 .tile {
@@ -330,7 +333,15 @@ small.muted {
   padding: 30px;
   text-align: center;
   font-size: 24px;
-  font-weight: 800
+  font-weight: 800;
+  text-decoration: none;
+  color: #2256ce;
+  /* Color del texto */
+}
+
+.tile:hover {
+  text-decoration: none;
+  /* Sin subrayado al pasar el mouse */
 }
 
 @media (max-width:900px) {

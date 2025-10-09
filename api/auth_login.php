@@ -49,7 +49,7 @@ try {
     
     http_response_code(401); 
     ob_end_clean();
-    echo 'Credenciales incorrectas';
+    echo 'Información incorrecta';
     
 } catch (Throwable $e) {
     http_response_code(500); 
