@@ -56,8 +56,8 @@ async function load() {
       const prod = document.createElement('div');
       prod.className = 'prod';
       const img = document.createElement('img');
-      img.src = it.imagen || 'images/placeholder.png';
-      const namebox = document.createElement('div');
+      // AQUÍ: Con este cambio nos aseguramos de que busque en la carpeta correcta
+      img.src = it.imagen ? 'images/' + it.imagen : 'images/placeholder.png'; const namebox = document.createElement('div');
       const title = document.createElement('div');
       title.textContent = it.nombre;
       const unit = document.createElement('div');
