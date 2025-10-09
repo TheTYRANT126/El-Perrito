@@ -400,3 +400,80 @@ small.muted {
   text-align: center;
   margin-top: 20px;
 }
+
+/* Reemplaza las reglas .th y .row en tu archivo public/css/styles.css con estas versiones mejoradas */
+
+/* Encabezados del carrito con mejor alineación */
+.th {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.7fr;
+  gap: 10px;
+  color: var(--blue);
+  font-weight: 700;
+  padding: 0 16px 8px;
+  align-items: center;
+}
+
+/* Filas del carrito con mejor alineación */
+.row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 0.7fr;
+  gap: 10px;
+  background: #ffe9dd;
+  border-radius: 16px;
+  padding: 12px;
+  margin: 12px 16px;
+  align-items: center;
+}
+
+.row .prod {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.row .prod img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.row .unit {
+  font-size: 14px;
+  color: #475569;
+}
+
+/* Columna de cantidad con mejor espaciado */
+.row .qtycol {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  /* <-- CAMBIA ESTO de flex-start a space-between */
+}
+
+.row .qtycol .line-total {
+  color: #0f172a;
+  font-weight: 700;
+  /* QUITA O REDUCE el margin-left */
+  margin-left: 100;
+  /* <-- Ponlo en 0 o elimina esta línea */
+}
+
+/* Columna de precio/eliminar alineada a la izquierda */
+.row>div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.trash {
+  background: none;
+  border: none;
+  color: #d00000;
+  font-size: 20px;
+  cursor: pointer;
+}
