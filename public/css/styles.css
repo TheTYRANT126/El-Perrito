@@ -318,10 +318,6 @@ small.muted {
   text-align: center
 }
 
-.summary h3 {
-  margin: 0 0 6px 0
-}
-
 .account-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -446,28 +442,34 @@ small.muted {
   color: #475569;
 }
 
-/* Columna de cantidad con mejor espaciado */
+/* Columna de cantidad SIN el precio */
 .row .qtycol {
   display: flex;
   align-items: center;
   gap: 12px;
-  justify-content: space-between;
-  /* <-- CAMBIA ESTO de flex-start a space-between */
+  justify-content: flex-start;
 }
 
-.row .qtycol .line-total {
+/* Nueva columna de precio con total y eliminar */
+.row .price-col {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  /* Alinear todo a la derecha */
+  gap: 8px;
+  /* Espacio pequeño entre precio y botón eliminar */
+}
+
+.row .price-col .line-total {
   color: #0f172a;
   font-weight: 700;
-  /* QUITA O REDUCE el margin-left */
-  margin-left: 100;
-  /* <-- Ponlo en 0 o elimina esta línea */
+  font-size: 16px;
 }
 
-/* Columna de precio/eliminar alineada a la izquierda */
+/* Columna de precio/eliminar alineada */
 .row>div:last-child {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
 }
 
 .trash {
