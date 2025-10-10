@@ -1,0 +1,306 @@
+-- ==== DB EL PERRITO (limpio desde cero) ====
+CREATE DATABASE IF NOT EXISTS elperrito
+  DEFAULT CHARACTER SET utf8mb4
+  DEFAULT COLLATE utf8mb4_unicode_ci;
+USE elperrito;
+
+-- CLIENTE (para compras en línea)
+CREATE TABLE IF NOT EXISTS CLIENTE (
+  id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL,
+  apellido VARCHAR(80) NOT NULL,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  telefono VARCHAR(30),
+  direccion VARCHAR(255),
+  password_hash VARCHAR(255) NOT NULL,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- USUARIO (admin / vendedor)
+CREATE TABLE IF NOT EXISTS USUARIO (
+  id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL,
+  email VARCHAR(120) NOT NULL UNIQUE,
+  rol ENUM('admin','vendedor') NOT NULL DEFAULT 'vendedor',
+  password_hash VARCHAR(255) NOT NULL,
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- CATEGORIA
+CREATE TABLE IF NOT EXISTS CATEGORIA (
+  id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  descripcion VARCHAR(255),
+  activa TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB;
+
+-- PRODUCTO
+CREATE TABLE IF NOT EXISTS PRODUCTO (
+  id_producto INT AUTO_INCREMENT PRIMARY KEY,
+  id_categoria INT NOT NULL,
+  nombre VARCHAR(120) NOT NULL,
+  descripcion TEXT,
+  precio_venta DECIMAL(10,2) NOT NULL,
+  imagen VARCHAR(255),
+  es_medicamento TINYINT(1) NOT NULL DEFAULT 0,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  CONSTRAINT fk_producto_categoria
+    FOREIGN KEY (id_categoria) REFERENCES CATEGORIA(id_categoria)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- INVENTARIO (1:1 con producto)
+CREATE TABLE IF NOT EXISTS INVENTARIO (
+  id_producto INT PRIMARY KEY,
+  stock INT NOT NULL DEFAULT 0,
+  stock_minimo INT NOT NULL DEFAULT 0,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_inventario_producto
+    FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- CARRITO + ITEMS (carrito persistente)
+CREATE TABLE IF NOT EXISTS CARRITO (
+  id_carrito INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT NOT NULL,
+  estado ENUM('activo','cerrado') NOT NULL DEFAULT 'activo',
+  creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_carrito_cliente FOREIGN KEY (id_cliente) REFERENCES CLIENTE(id_cliente)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS ITEM_CARRITO (
+  id_item INT AUTO_INCREMENT PRIMARY KEY,
+  id_carrito INT NOT NULL,
+  id_producto INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_item_carrito FOREIGN KEY (id_carrito) REFERENCES CARRITO(id_carrito)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_item_producto FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- VENTA / DETALLE_VENTA / PAGO
+CREATE TABLE IF NOT EXISTS VENTA (
+  id_venta INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT NOT NULL,
+  fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  impuestos DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  estado ENUM('pendiente','pagada','cancelada') NOT NULL DEFAULT 'pendiente',
+  CONSTRAINT fk_venta_cliente
+    FOREIGN KEY (id_cliente) REFERENCES CLIENTE(id_cliente)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS DETALLE_VENTA (
+  id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+  id_venta INT NOT NULL,
+  id_producto INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  importe DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_detalle_venta FOREIGN KEY (id_venta) REFERENCES VENTA(id_venta)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_detalle_producto FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS PAGO (
+  id_pago INT AUTO_INCREMENT PRIMARY KEY,
+  id_venta INT NOT NULL,
+  metodo ENUM('efectivo','tarjeta') NOT NULL,
+  monto DECIMAL(10,2) NOT NULL,
+  fecha_pago DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  referencia VARCHAR(120),
+  CONSTRAINT fk_pago_venta FOREIGN KEY (id_venta) REFERENCES VENTA(id_venta)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ENVIO (preparado para futuro; no lo usamos aún)
+CREATE TABLE IF NOT EXISTS ENVIO (
+  id_envio INT AUTO_INCREMENT PRIMARY KEY,
+  id_venta INT NOT NULL,
+  direccion VARCHAR(255),
+  metodo VARCHAR(80),
+  costo DECIMAL(10,2) DEFAULT 0.00,
+  estado VARCHAR(40),
+  tracking VARCHAR(120),
+  CONSTRAINT fk_envio_venta FOREIGN KEY (id_venta) REFERENCES VENTA(id_venta)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Regla: UN carrito ACTIVO por cliente (MariaDB 10.x o MySQL 8)
+-- Si tu MySQL no acepta PERSISTENT, cambia PERSISTENT por STORED.
+ALTER TABLE CARRITO
+  ADD COLUMN id_cliente_activo INT
+  AS (CASE WHEN estado = 'activo' THEN id_cliente ELSE NULL END) PERSISTENT;
+
+CREATE UNIQUE INDEX unq_carrito_activo_cliente ON CARRITO(id_cliente_activo);
+
+-- Índices útiles
+CREATE INDEX idx_producto_nombre ON PRODUCTO(nombre);
+CREATE INDEX idx_producto_categoria ON PRODUCTO(id_categoria);
+
+-- Datos demo (3 productos)
+INSERT INTO CATEGORIA (nombre, descripcion) VALUES
+ ('Alimentos', 'Comida para mascotas'),
+ ('Medicinas', 'Medicamentos veterinarios'),
+ ('Accesorios', 'Correas, juguetes, etc.');
+
+INSERT INTO PRODUCTO (id_categoria, nombre, descripcion, precio_venta, imagen, es_medicamento, activo) VALUES
+ (1, 'Croquetas Premium 5kg', 'Alimento balanceado para perro adulto', 499.00, 'images/croquetas.jpg', 0, 1),
+ (3, 'Collar Antipulgas', 'Protección por 3 meses', 189.00, 'images/collar.jpg', 0, 1),
+ (2, 'Antiparasitario X 50ml', 'Uso tópico, consultar con MVZ', 229.00, 'images/antiparasitario.jpg', 1, 1);
+
+INSERT INTO INVENTARIO (id_producto, stock, stock_minimo) VALUES
+ (1, 25, 5),
+ (2, 40, 10),
+ (3, 15, 5);
+
+-- Admin demo: admin@example.com / Admin1234
+INSERT INTO USUARIO (nombre, email, rol, password_hash)
+VALUES ('Administrador', 'admin@example.com', 'admin',
+'$2y$10$Tdl.9c6bHfR5QCkP6Xeq3uWbqPpJz3N0Kz6o/i6eI9GdDkL4o8Fh6');
+
+-- Cliente demo: cliente@example.com / Cliente1234
+INSERT INTO CLIENTE (nombre, apellido, email, telefono, direccion, password_hash)
+VALUES ('Juan', 'Pérez', 'cliente@example.com', '229-000-0000', 'Veracruz, MX',
+'$2y$10$2w3k7n4u1QbB0B0rAVnnAOUhvq6xqRk5mR3Lz0c8eZBZZmNqgW7b6');
+
+-- schema.sql
+CREATE DATABASE IF NOT EXISTS elperrito CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE elperrito;
+
+CREATE TABLE IF NOT EXISTS CLIENTE (
+  id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL,
+  apellido VARCHAR(80) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  telefono VARCHAR(40),
+  direccion VARCHAR(255),
+  password_hash VARCHAR(255) NOT NULL,
+  fecha_registro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo'
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS USUARIO (
+  id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL,
+  email VARCHAR(160) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  rol ENUM('admin','operador') NOT NULL DEFAULT 'admin',
+  activo TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS CATEGORIA (
+  id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL UNIQUE,
+  descripcion VARCHAR(255),
+  activa TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS PRODUCTO (
+  id_producto INT AUTO_INCREMENT PRIMARY KEY,
+  id_categoria INT NOT NULL,
+  nombre VARCHAR(180) NOT NULL,
+  descripcion TEXT,
+  precio_venta DECIMAL(10,2) NOT NULL,
+  imagen VARCHAR(255),
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  CONSTRAINT fk_prod_cat FOREIGN KEY (id_categoria) REFERENCES CATEGORIA(id_categoria)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS PRODUCTO_IMAGEN (
+  id_imagen INT AUTO_INCREMENT PRIMARY KEY,
+  id_producto INT NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  prioridad INT NOT NULL DEFAULT 0,
+  CONSTRAINT fk_pimg_producto FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS INVENTARIO (
+  id_producto INT PRIMARY KEY,
+  stock INT NOT NULL DEFAULT 0,
+  stock_minimo INT NOT NULL DEFAULT 0,
+  CONSTRAINT fk_inv_prod FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS CARRITO (
+  id_carrito INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT NOT NULL,
+  estado ENUM('activo','cerrado') NOT NULL DEFAULT 'activo',
+  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_cart_cliente FOREIGN KEY (id_cliente) REFERENCES CLIENTE(id_cliente)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS DETALLE_CARRITO (
+  id_item INT AUTO_INCREMENT PRIMARY KEY,
+  id_carrito INT NOT NULL,
+  id_producto INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_dcart_cart FOREIGN KEY (id_carrito) REFERENCES CARRITO(id_carrito)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_dcart_prod FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS VENTA (
+  id_venta INT AUTO_INCREMENT PRIMARY KEY,
+  id_cliente INT NOT NULL,
+  fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  total DECIMAL(12,2) NOT NULL,
+  estado_pago ENUM('pendiente','pagado','rechazado') NOT NULL DEFAULT 'pendiente',
+  direccion_envio VARCHAR(255),
+  CONSTRAINT fk_venta_cliente FOREIGN KEY (id_cliente) REFERENCES CLIENTE(id_cliente)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS DETALLE_VENTA (
+  id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+  id_venta INT NOT NULL,
+  id_producto INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_dventa_venta FOREIGN KEY (id_venta) REFERENCES VENTA(id_venta)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_dventa_prod FOREIGN KEY (id_producto) REFERENCES PRODUCTO(id_producto)
+    ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- Categorías base
+INSERT IGNORE INTO CATEGORIA(nombre, descripcion) VALUES
+('Comida','Alimento para mascotas'),
+('Medicina','Medicinas y tratamientos'),
+('Limpieza','Shampoos y aseo'),
+('Juguetes','Juguetes y entretenimiento');
+
+-- Admin por defecto: admin@elperrito.local / admin123
+INSERT IGNORE INTO USUARIO(nombre, email, password_hash, rol) VALUES
+('Administrador', 'admin@elperrito.local',
+'$2y$10$knT6D6Wzv4TQq2r3Q5QnNub0iWj7gI.7y0gq0l8L8mQZp5s6b8pO2','admin');
+
+-- Producto de ejemplo
+INSERT IGNORE INTO PRODUCTO(id_categoria, nombre, descripcion, precio_venta, imagen, activo)
+SELECT (SELECT id_categoria FROM CATEGORIA WHERE nombre='Limpieza'),
+       'Shampoo 125ml', 'Shampoo para perros pH balanceado.', 120.00,
+       'images/shampoo.png', 1;
+
+INSERT IGNORE INTO INVENTARIO(id_producto, stock, stock_minimo)
+SELECT id_producto, 20, 2 FROM PRODUCTO WHERE nombre='Shampoo 125ml';
+
+INSERT IGNORE INTO PRODUCTO_IMAGEN(id_producto, url, prioridad)
+SELECT id_producto, 'images/shampoo_alt1.png', 1 FROM PRODUCTO WHERE nombre='Shampoo 125ml';
+INSERT IGNORE INTO PRODUCTO_IMAGEN(id_producto, url, prioridad)
+SELECT id_producto, 'images/shampoo_alt2.png', 2 FROM PRODUCTO WHERE nombre='Shampoo 125ml';
+
+CREATE INDEX IF NOT EXISTS idx_prod_nombre ON PRODUCTO(nombre);
