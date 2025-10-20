@@ -1,4 +1,3 @@
-// public/js/profile.js
 
 const verifySection = document.getElementById('verify-section');
 const editSection = document.getElementById('edit-section');
@@ -17,7 +16,7 @@ verifyForm.addEventListener('submit', async (e) => {
     try {
         const formData = new FormData(verifyForm);
 
-        // Primero obtenemos el email del usuario actual
+        // obtener el email del usuario actual
         const sessionResponse = await fetch('../api/client_info.php', {
             credentials: 'include'
         });
@@ -31,7 +30,7 @@ verifyForm.addEventListener('submit', async (e) => {
         const sessionData = await sessionResponse.json();
         formData.append('email', sessionData.email);
 
-        // Verificamos la contraseña
+        // Verificar la contraseña
         const response = await fetch('../api/verify_password.php', {
             method: 'POST',
             body: formData,
@@ -42,7 +41,7 @@ verifyForm.addEventListener('submit', async (e) => {
         const cleanText = text.trim();
 
         if (response.ok && cleanText === 'OK') {
-            // Contraseña correcta, cargamos los datos del usuario
+            // Contraseña correcta, cargar los datos del usuario
             userData = sessionData;
             loadUserData();
             verifySection.style.display = 'none';

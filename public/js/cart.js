@@ -1,4 +1,3 @@
-// public/js/cart.js
 
 const rows = document.getElementById('rows');
 const subinfo = document.getElementById('subinfo');
@@ -17,13 +16,13 @@ async function load() {
 
     console.log('Response status:', response.status);
 
-    // Primero verificamos si la respuesta es JSON válido
+    // verificacion si la respuesta es JSON válido
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
       const text = await response.text();
       console.error('Respuesta no es JSON:', text);
 
-      // Si la respuesta indica que no hay login
+
       if (text.includes('NO_LOGIN') || response.status === 401) {
         rows.innerHTML = '<div class="card">Inicia sesión para ver tu carrito.</div>';
         subinfo.innerHTML = '<small class="muted">—</small>';
@@ -73,7 +72,7 @@ async function load() {
       namebox.append(title, unit);
       prod.append(img, namebox);
 
-      // Columna de cantidad (SIN el precio)
+      // Columna de cantidad
       const qtycol = document.createElement('div');
       qtycol.className = 'qtycol';
       const minus = document.createElement('button');
@@ -101,7 +100,7 @@ async function load() {
 
       qtycol.append(minus, n, plus);
 
-      // Columna de precio CON el total y botón eliminar
+      // Columna de precio 
       const priceCol = document.createElement('div');
       priceCol.className = 'price-col';
       priceCol.style.display = 'flex';
@@ -197,21 +196,18 @@ async function checkSessionAndLoad() {
     console.log('Estado de sesión:', sessionData);
 
     if (sessionData.status === 'cliente' || sessionData.status === 'admin') {
-      // Usuario autenticado, cargar carrito
       load();
     } else {
-      // No autenticado
       rows.innerHTML = '<div class="card">Inicia sesión para ver tu carrito.</div>';
       subinfo.innerHTML = '<small class="muted">—</small>';
       pay.disabled = true;
     }
   } catch (error) {
     console.error('Error verificando sesión:', error);
-    load(); // Intentar cargar de todos modos
+    load();
   }
 }
 
-// Iniciar cuando el DOM esté listo
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', checkSessionAndLoad);
 } else {

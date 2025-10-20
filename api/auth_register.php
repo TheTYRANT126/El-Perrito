@@ -1,15 +1,14 @@
 <?php
-// IMPORTANTE: Asegúrate de que no hay espacios o líneas antes de <?php
 require_once __DIR__ . '/../lib/db.php';
 
-// Limpiamos cualquier output buffer previo
+// Limpiar buffer previo
 if (ob_get_level()) {
     ob_clean();
 }
 
-// Establecemos headers limpios
+
 header('Content-Type: text/plain; charset=utf-8');
-// Evitamos caché
+// Evitar el cache
 header('Cache-Control: no-cache, must-revalidate');
 
 $nombre = trim($_POST['nombre'] ?? '');
@@ -57,13 +56,12 @@ try {
     $st = $pdo->prepare("INSERT INTO CLIENTE(nombre, apellido, email, telefono, direccion, password_hash) VALUES (?,?,?,?,?,?)");
     $st->execute([$nombre,$apellido,$email,$telefono,$direccion,$hash]);
     
-    // Aseguramos que solo enviamos "OK" sin espacios adicionales
+
     echo "OK";
-    exit; // Importante: terminar el script aquí
+    exit; 
     
 } catch (PDOException $e) {
     http_response_code(500);
     echo "ERROR_BD";
     exit;
 }
-// IMPORTANTE: No debe haber ningún cierre ?> al final del archivo

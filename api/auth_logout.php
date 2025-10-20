@@ -1,5 +1,5 @@
 <?php
-// api/auth_logout.php
+
 require_once __DIR__ . '/../lib/session.php';
 
 // Destruir todas las variables de sesión
@@ -14,9 +14,7 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Destruir la sesión
 session_destroy();
 
-// Responder con éxito
 http_response_code(200);
 echo "OK";

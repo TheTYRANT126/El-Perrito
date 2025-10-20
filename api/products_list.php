@@ -1,9 +1,7 @@
 ﻿<?php
-// IMPORTANTE: Guardar como UTF-8 SIN BOM
 
-// Activar reporte de errores para desarrollo
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // No mostrar en pantalla
+ini_set('display_errors', 0); // No mostrar en pantall
 ini_set('log_errors', 1);      // Sí guardar en log
 
 // Limpiar buffer

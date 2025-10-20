@@ -2,9 +2,7 @@ const loginForm = document.getElementById('loginForm');
 const regForm = document.getElementById('regForm');
 const msg = document.getElementById('msg');
 
-// Función helper para limpiar BOM y caracteres invisibles
 function cleanResponse(text) {
-    // Elimina BOM UTF-8, espacios, tabs y saltos de línea
     return text.replace(/^\uFEFF/, '').replace(/^\s+|\s+$/g, '');
 }
 
@@ -41,7 +39,6 @@ if (loginForm) {
             });
             const t = await r.text();
 
-            // Limpiamos la respuesta de BOM y espacios
             const cleanText = cleanResponse(t);
 
             console.log('Login - Respuesta raw:', t);
@@ -74,7 +71,6 @@ if (regForm) {
             });
             const t = await r.text();
 
-            // Limpiamos la respuesta de BOM y espacios
             const cleanText = cleanResponse(t);
 
             console.log('Registro - Respuesta raw:', t);

@@ -1,7 +1,7 @@
-// public/js/account.js
+
 const drawer = document.getElementById('drawer');
 
-// Historial de compras (comentado por ahora)
+// Historial de compras xdxdxd  habilitar después
 // document.getElementById('tile-history').onclick = async (e) => {
 //     e.preventDefault();
 //     const data = await (await fetch('../api/orders_list.php', { credentials: 'include' })).json();

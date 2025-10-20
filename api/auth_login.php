@@ -1,10 +1,8 @@
 <?php
-// IMPORTANTE: No debe haber NADA antes de <?php, ni espacios ni líneas vacías
-ob_start(); // Iniciamos buffer de salida
+ob_start(); 
 require_once __DIR__ . '/../lib/session.php';
 require_once __DIR__ . '/../lib/db.php';
 
-// Limpiamos cualquier salida previa (incluido BOM)
 ob_clean();
 
 header('Content-Type: text/plain; charset=utf-8');
@@ -56,4 +54,3 @@ try {
     ob_end_clean();
     echo 'Error de servidor';
 }
-// NO cerrar con ?>

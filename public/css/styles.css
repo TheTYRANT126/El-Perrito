@@ -25,13 +25,13 @@ body {
 }
 
 .bg {
-  /* AQUÍ: Esta es la parte que he cambiado para que funcione */
+
   background-image: linear-gradient(180deg, rgba(255, 255, 255, .85), rgba(255, 192, 203, .12)), url('../images/fondo.png');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  /* <- Esta línea fija AMBOS fondos */
+
   min-height: 100vh;
 }
 
@@ -127,9 +127,7 @@ small.muted {
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 18px;
 
-  /* AQUÍ: Añade separación hacia abajo de la barra de búsqueda */
   margin-top: 24px;
-  /* <--- Puedes ajustar este valor como prefieras (ej: 30px, 1rem, etc.) */
 }
 
 .pcard {
@@ -360,28 +358,28 @@ small.muted {
   }
 }
 
-/* Centrar el botón dentro del formulario de login */
+
 #loginForm button {
   display: block;
-  /* 1. El botón debe ser un elemento de bloque */
+
   width: 30%;
-  /* 2. Dale un ancho (puedes ajustarlo) */
+
   margin: 20px auto 0;
-  /* 3. Centra horizontalmente y añade un margen superior */
+
 }
 
-/* Separación para los campos del formulario de login */
+
 #loginForm input {
   margin-bottom: 16px;
-  /* <-- Ajusta este valor si quieres más o menos espacio */
+
 }
 
-/* Contenedor de cada grupo (etiqueta + input) */
+
 .form-group {
   margin-bottom: 12px;
 }
 
-/* Estilo para las etiquetas (Nombre, Apellido, etc.) */
+
 .form-group label {
   display: block;
   font-weight: 600;
@@ -390,27 +388,24 @@ small.muted {
   margin-bottom: 6px;
 }
 
-/* Hacer que el botón de registro ocupe todo el ancho */
+
 #regForm button {
   width: 100%;
   margin-top: 16px;
 }
 
-/* Centrar el texto final de "inicia sesión" */
+
 #regForm+p {
   text-align: center;
   margin-top: 20px;
 }
 
-/* Centrar el texto final de "¿No tienes cuenta?" */
 #loginForm+p {
   text-align: center;
   margin-top: 20px;
 }
 
-/* Reemplaza las reglas .th y .row en tu archivo public/css/styles.css con estas versiones mejoradas */
 
-/* Encabezados del carrito con mejor alineación */
 .th {
   display: grid;
   grid-template-columns: 1.5fr 1fr 0.7fr;
@@ -421,7 +416,6 @@ small.muted {
   align-items: center;
 }
 
-/* Filas del carrito con mejor alineación */
 .row {
   display: grid;
   grid-template-columns: 1.5fr 1fr 0.7fr;
@@ -453,7 +447,6 @@ small.muted {
   color: #475569;
 }
 
-/* Columna de cantidad SIN el precio */
 .row .qtycol {
   display: flex;
   align-items: center;
@@ -461,14 +454,11 @@ small.muted {
   justify-content: flex-start;
 }
 
-/* Nueva columna de precio con total y eliminar */
 .row .price-col {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  /* Alinear todo a la derecha */
   gap: 8px;
-  /* Espacio pequeño entre precio y botón eliminar */
 }
 
 .row .price-col .line-total {
@@ -477,7 +467,6 @@ small.muted {
   font-size: 16px;
 }
 
-/* Columna de precio/eliminar alineada */
 .row>div:last-child {
   display: flex;
   align-items: center;
@@ -489,4 +478,12 @@ small.muted {
   color: #d00000;
   font-size: 20px;
   cursor: pointer;
+}
+
+#msg {
+  color: #dc2626;
+  font-weight: 700;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 16px;
 }

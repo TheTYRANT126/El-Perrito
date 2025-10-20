@@ -1,4 +1,4 @@
-// public/js/delete-account.js
+
 
 const deleteForm = document.getElementById('deleteForm');
 const msg = document.getElementById('msg');
@@ -95,5 +95,5 @@ deleteForm.addEventListener('submit', async (e) => {
     }
 });
 
-// Cargar info al iniciar
+
 loadUserInfo();

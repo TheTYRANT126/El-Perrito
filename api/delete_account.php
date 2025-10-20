@@ -1,6 +1,5 @@
 <?php
-// api/delete_account.php
-// Limpiar cualquier output buffer
+
 if (ob_get_level()) {
     ob_clean();
 }

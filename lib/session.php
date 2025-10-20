@@ -8,8 +8,8 @@ if (session_status() === PHP_SESSION_NONE) {
   ]);
   session_start();
 }
-?
-// Configurar tiempo de expiración de sesión (30 minutos de inactividad)
+
+// Configurar tiempo de expiración de sesión 
 $session_timeout = 30 * 60; // 30 minutos en segundos
 
 // Verificar si la sesión ha expirado

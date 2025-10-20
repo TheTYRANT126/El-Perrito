@@ -1,4 +1,3 @@
-// public/js/home.js - VERSIÓN CORREGIDA CON DEBUGGING
 const grid = document.getElementById('grid');
 const q = document.getElementById('q');
 const btnBuscar = document.getElementById('btnBuscar');

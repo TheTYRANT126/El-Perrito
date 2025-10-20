@@ -1,13 +1,13 @@
 <?php
 require_once __DIR__ . '/../lib/db.php';
 require_once __DIR__ . '/../lib/auth.php';
-require_once __DIR__ . '/cart_helpers.php'; // <-- Esta línea es la que se agregó
+require_once __DIR__ . '/cart_helpers.php'; 
 require_login_cliente();
 
 $cid = (int)$_SESSION['cliente_id'];
 $id_carrito = cart_get_or_create($cid, $pdo);
 
-// AQUÍ: Con este cambio nos aseguramos de que la consulta nunca falle por imágenes vacías
+// para que la consulta no falle por falta de imagenes
 $sql = "SELECT i.id_item, i.id_producto, i.cantidad, i.precio_unitario, p.nombre, COALESCE(p.imagen, '') as imagen
         FROM DETALLE_CARRITO i
         JOIN PRODUCTO p ON p.id_producto=i.id_producto
