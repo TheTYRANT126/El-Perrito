@@ -8,6 +8,27 @@ function cleanResponse(text) {
     return text.replace(/^\uFEFF/, '').replace(/^\s+|\s+$/g, '');
 }
 
+// Verificar si el usuario ya tiene sesión activa
+async function checkActiveSession() {
+    try {
+        const response = await fetch('../api/session_status.php', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+
+        // Si el usuario ya está logueado (cliente o admin), redirigir a account.html
+        if (data.status === 'cliente' || data.status === 'admin') {
+            console.log('Usuario ya tiene sesión activa, redirigiendo a account.html...');
+            window.location.href = 'account.html';
+        }
+    } catch (error) {
+        console.error('Error verificando sesión:', error);
+    }
+}
+
+// Ejecutar verificación al cargar la página
+checkActiveSession();
+
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
