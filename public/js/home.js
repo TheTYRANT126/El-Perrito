@@ -209,10 +209,10 @@ async function search() {
             n.style.textAlign = 'center';
 
             minus.onclick = () => {
-                n.value = Math.max(1, parseInt(n.value || '1') - 1)
+                n.value = Math.max(1, parseInt(n.value || '1') - 1);
             };
             plus.onclick = () => {
-                n.value = parseInt(n.value || '1') + 1
+                n.value = parseInt(n.value || '1') + 1;
             };
 
             // Función para agregar al carrito
