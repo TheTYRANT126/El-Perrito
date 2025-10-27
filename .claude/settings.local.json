@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "Bash(powershell -Command \"Get-Content ''public/js/home.js'' | Measure-Object -Line\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

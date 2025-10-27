@@ -12,12 +12,12 @@ async function load() {
     const all = [{ url: p.imagen || 'images/placeholder.png' }, ...imgs];
     let current = all[0].url;
     all.forEach(o => {
-        const t = document.createElement('img'); t.src = o.url; t.style.width = '110px'; t.style.height = '110px'; t.style.objectFit = 'contain'; t.style.background = '#fff'; t.style.borderRadius = '16px'; t.style.border = '1px solid #eee'; t.onclick = () => { current = o.url; big.src = o.url; };
+        const t = document.createElement('img'); t.src = o.url; t.style.width = '110px'; t.style.height = '110px'; t.style.objectFit = 'contain'; t.style.background = '#fff'; t.style.borderRadius = '16px'; t.style.border = '1px solid #eee'; t.onerror = function() { this.src = 'images/placeholder.png'; }; t.onclick = () => { current = o.url; big.src = o.url; };
         thumbs.append(t);
     });
 
     const stage = document.createElement('div'); stage.className = 'card'; stage.style.borderRadius = '24px';
-    const big = document.createElement('img'); big.src = current; big.style.display = 'block'; big.style.margin = '20px auto'; big.style.height = '300px'; big.style.objectFit = 'contain';
+    const big = document.createElement('img'); big.src = current; big.style.display = 'block'; big.style.margin = '20px auto'; big.style.height = '300px'; big.style.objectFit = 'contain'; big.onerror = function() { this.src = 'images/placeholder.png'; };
     stage.append(big);
 
     const info = document.createElement('div');
