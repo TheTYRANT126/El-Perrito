@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Panel de Administración</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="index.html">Inicio</a>
+            <a class="disabled" href="#">Promociones</a>
+            <a href="cart.html">Carrito</a>
+            <a id="accountLink" href="account.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="admin-header">
+            <h1 id="adminTitle">Panel de Administración</h1>
+            <p id="adminSubtitle"></p>
+        </div>
+
+        <!-- Pestañas -->
+        <div class="tabs">
+            <button class="tab active" data-tab="productos">Productos</button>
+            <button class="tab" data-tab="usuarios" id="tabUsuarios">Usuarios</button>
+            <button class="tab" data-tab="clientes" id="tabClientes">Clientes</button>
+        </div>
+
+        <!-- Contenido de Productos -->
+        <div class="tab-content active" id="productos-content">
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="searchProductos" placeholder="Buscar por nombre o ID">
+                    <button class="btn primary" id="btnSearchProductos">Buscar</button>
+                    <button class="btn outline" id="btnClearProductos">Limpiar</button>
+                    <button class="btn success" id="btnCrearProducto" style="margin-left: auto;">Crear Producto</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th>Existencia</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productosTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="productosPagination"></div>
+            </div>
+        </div>
+
+        <!-- Contenido de Usuarios -->
+        <div class="tab-content" id="usuarios-content">
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="searchUsuarios" placeholder="Buscar por nombre o email">
+                    <button class="btn primary" id="btnSearchUsuarios">Buscar</button>
+                    <button class="btn outline" id="btnClearUsuarios">Limpiar</button>
+                    <button class="btn success" id="btnCrearUsuario" style="margin-left: auto;">Crear Usuario</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Estado</th>
+                                <th>Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usuariosTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="usuariosPagination"></div>
+            </div>
+        </div>
+
+        <!-- Contenido de Clientes -->
+        <div class="tab-content" id="clientes-content">
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" id="searchClientes" placeholder="Buscar por nombre o email">
+                    <button class="btn primary" id="btnSearchClientes">Buscar</button>
+                    <button class="btn outline" id="btnClearClientes">Limpiar</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientesTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Cargando...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="clientesPagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/header.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+
+</html>

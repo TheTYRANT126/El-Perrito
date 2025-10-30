@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Historial de Cambios</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="index.html">Inicio</a>
+            <a id="accountLink" href="account.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+                <h1 style="color:#2c5db5; font-size:36px; margin:0;">Historial de Cambios</h1>
+                <p id="userName" style="color:#64748b; font-size:18px; margin:8px 0 0 0;"></p>
+            </div>
+            <button class="btn outline" onclick="window.history.back()">← Volver</button>
+        </div>
+
+        <div class="card">
+            <div style="margin-bottom: 20px;">
+                <p style="color:#64748b;">Este historial muestra todos los cambios realizados en los datos de este usuario, incluyendo qué cambió, cuándo y quién lo hizo.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Campo Modificado</th>
+                            <th>Valor Anterior</th>
+                            <th>Valor Nuevo</th>
+                            <th>Modificado Por</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historialBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Cargando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/header.js"></script>
+    <script>
+        let userId = null;
+
+        (async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            userId = urlParams.get('id');
+
+            if (!userId) {
+                alert('ID de usuario no especificado');
+                window.history.back();
+                return;
+            }
+
+            await loadUserInfo(userId);
+            await loadHistorial(userId);
+        })();
+
+        async function loadUserInfo(id) {
+            try {
+                const response = await fetch(`../api/admin_user_get.php?id=${id}`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Error al cargar usuario');
+
+                const data = await response.json();
+                const user = data.usuario;
+
+                document.getElementById('userName').textContent = 
+                    `Usuario: ${user.nombre} ${user.apellido || ''} (${user.email})`;
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadHistorial(id) {
+            try {
+                const response = await fetch(`../api/admin_user_history.php?id=${id}`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) throw new Error('Error al cargar historial');
+
+                const data = await response.json();
+                const historial = data.historial || [];
+
+                const tbody = document.getElementById('historialBody');
+
+                if (historial.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color:#64748b;">No hay cambios registrados</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+
+                historial.forEach(cambio => {
+                    const tr = document.createElement('tr');
+
+                    const fecha = new Date(cambio.fecha_cambio);
+                    const fechaStr = fecha.toLocaleString('es-MX', { 
+                        dateStyle: 'medium', 
+                        timeStyle: 'medium' 
+                    });
+
+                    // Formatear campo
+                    const campo = cambio.campo_modificado
+                        .replace(/_/g, ' ')
+                        .replace(/\b\w/g, l => l.toUpperCase());
+
+                    // Formatear valores
+                    let valorAnterior = cambio.valor_anterior || '<span style="color:#94a3b8;">(vacío)</span>';
+                    let valorNuevo = cambio.valor_nuevo || '<span style="color:#94a3b8;">(vacío)</span>';
+
+                    // Truncar valores muy largos
+                    if (valorAnterior.length > 50) {
+                        valorAnterior = valorAnterior.substring(0, 47) + '...';
+                    }
+                    if (valorNuevo.length > 50) {
+                        valorNuevo = valorNuevo.substring(0, 47) + '...';
+                    }
+
+                    const modificador = cambio.modificador_nombre ?
+                        `${cambio.modificador_nombre} ${cambio.modificador_apellido || ''}` :
+                        '<span style="color:#94a3b8;">Sistema</span>';
+
+                    tr.innerHTML = `
+                        <td style="white-space: nowrap;">${fechaStr}</td>
+                        <td><strong>${campo}</strong></td>
+                        <td>${valorAnterior}</td>
+                        <td><span style="color:#2c5db5; font-weight:600;">${valorNuevo}</span></td>
+                        <td>${modificador}</td>
+                    `;
+
+                    tbody.appendChild(tr);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                const tbody = document.getElementById('historialBody');
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color:#d00000;">Error al cargar historial</td></tr>';
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,326 @@
+/* Estilos específicos para el panel de administración */
+
+.admin-header {
+    margin-bottom: 30px;
+}
+
+.admin-header h1 {
+    color: #2c5db5;
+    font-size: 36px;
+    margin: 0 0 8px 0;
+}
+
+.admin-header p {
+    color: #64748b;
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Sistema de pestañas */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab {
+    background: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    color: #2c5db5;
+    background: #f0f7ff;
+}
+
+.tab.active {
+    color: #2c5db5;
+    border-bottom-color: #2c5db5;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-bar input {
+    flex: 1;
+}
+
+/* Tabla de administración */
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+.admin-table thead {
+    background: #f8f9fa;
+}
+
+.admin-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 700;
+    color: #2c5db5;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.admin-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.admin-table img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+}
+
+/* Badges de estado */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge.activo {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge.inactivo {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge.admin {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge.operador {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 6px;
+}
+
+.btn-edit {
+    background: #2c5db5;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-delete {
+    background: #d00000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-view {
+    background: #6c757d;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-small:hover {
+    opacity: 0.8;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 12px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.pagination button:hover:not(:disabled) {
+    background: #f0f7ff;
+    border-color: #2c5db5;
+    color: #2c5db5;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination button.active {
+    background: #2c5db5;
+    color: #fff;
+    border-color: #2c5db5;
+}
+
+.pagination span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    width: 90%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #2c5db5;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #64748b;
+}
+
+.modal-close:hover {
+    color: #d00000;
+}
+
+/* Formularios del modal */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .tabs {
+        overflow-x: auto;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-bar {
+        flex-wrap: wrap;
+    }
+    
+    .table-wrapper {
+        font-size: 14px;
+    }
+}

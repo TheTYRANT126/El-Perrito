@@ -9,7 +9,7 @@ function cleanResponse(text) {
 // Verificar si el usuario ya tiene sesión activa
 async function checkActiveSession() {
     try {
-        const response = await fetch('../api/session_status.php', {
+        const response = await fetch('../api/session_status_improved.php', {
             credentials: 'include'
         });
         const data = await response.json();

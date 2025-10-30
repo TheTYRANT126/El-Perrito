@@ -16,5 +16,18 @@ $st = $pdo->prepare($sql);
 $st->execute([$id_carrito]);
 $items = $st->fetchAll();
 
+// Normalizar las rutas de las imágenes
+foreach ($items as &$item) {
+    if ($item['imagen']) {
+        // Si no tiene "images/" al inicio, agregarlo
+        if (strpos($item['imagen'], 'images/') !== 0) {
+            $item['imagen'] = 'images/' . $item['imagen'];
+        }
+    } else {
+        $item['imagen'] = 'images/placeholder.png';
+    }
+}
+unset($item); // Romper la referencia
+
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode(['id_carrito'=>$id_carrito, 'items'=>$items], JSON_UNESCAPED_UNICODE);

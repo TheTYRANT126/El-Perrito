@@ -56,7 +56,7 @@ async function load() {
       const prod = document.createElement('div');
       prod.className = 'prod';
       const img = document.createElement('img');
-      img.src = it.imagen && it.imagen !== '' ? 'images/' + it.imagen : 'images/placeholder.png';
+      img.src = it.imagen || 'images/placeholder.png';
       img.alt = it.nombre;
       img.onerror = function () {
         console.warn('Error cargando imagen:', this.src);
@@ -189,7 +189,7 @@ async function checkSessionAndLoad() {
   console.log('Verificando sesión antes de cargar carrito...');
 
   try {
-    const sessionResponse = await fetch('../api/session_status.php', {
+    const sessionResponse = await fetch('../api/session_status_improved.php', {
       credentials: 'include'
     });
     const sessionData = await sessionResponse.json();

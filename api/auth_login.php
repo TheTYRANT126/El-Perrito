@@ -32,15 +32,16 @@ try {
     }
     
     // Admin
-    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, rol FROM USUARIO WHERE email=:e LIMIT 1");
+    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, apellido, rol FROM USUARIO WHERE email=:e LIMIT 1");
     $st->execute([':e'=>$email]);
     if ($s = $st->fetch()) {
         if (password_verify($password, $s['password_hash'])) {
             $_SESSION['usuario_id'] = (int)$s['id_usuario'];
             $_SESSION['usuario_nombre'] = $s['nombre'];
+            $_SESSION['usuario_apellido'] = $s['apellido'];
             $_SESSION['usuario_rol'] = $s['rol'];
             ob_end_clean(); // Limpiamos el buffer antes de enviar
-            echo 'OK_ADMIN'; 
+            echo 'OK_ADMIN';
             exit;
         }
     }

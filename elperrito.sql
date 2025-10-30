@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-10-2025 a las 02:16:21
+-- Tiempo de generación: 30-10-2025 a las 17:05:16
 -- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.0.30
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -134,6 +134,22 @@ CREATE TABLE `detalle_venta` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `historial_usuario`
+--
+
+CREATE TABLE `historial_usuario` (
+  `id_historial` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `campo_modificado` varchar(100) NOT NULL,
+  `valor_anterior` text DEFAULT NULL,
+  `valor_nuevo` text DEFAULT NULL,
+  `fecha_cambio` datetime NOT NULL DEFAULT current_timestamp(),
+  `id_usuario_modificador` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `inventario`
 --
 
@@ -193,6 +209,10 @@ CREATE TABLE `producto` (
   `descripcion` text DEFAULT NULL,
   `precio_venta` decimal(10,2) NOT NULL,
   `imagen` varchar(255) DEFAULT NULL,
+  `caducidad` date DEFAULT NULL,
+  `id_usuario_creador` int(11) DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_modificacion` datetime DEFAULT NULL,
   `es_medicamento` tinyint(1) NOT NULL DEFAULT 0,
   `activo` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -201,38 +221,38 @@ CREATE TABLE `producto` (
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id_producto`, `id_categoria`, `nombre`, `descripcion`, `precio_venta`, `imagen`, `es_medicamento`, `activo`) VALUES
-(1, 1, 'Croquetas Premium Cachorro 2kg', 'Alimento balanceado para cachorros de 2 a 12 meses. Rico en proteínas y vitaminas esenciales para el crecimiento.', 299.00, 'images/croquetas_cachorro.jpg', 0, 1),
-(2, 1, 'Croquetas Premium Adulto 5kg', 'Alimento completo para perros adultos de todas las razas. Fórmula balanceada con omega 3 y 6.', 499.00, 'images/croquetas_adulto.jpg', 0, 1),
-(3, 1, 'Croquetas Light 3kg', 'Alimento bajo en calorías para perros con sobrepeso. Ayuda a mantener el peso ideal.', 389.00, 'images/croquetas_light.jpg', 0, 1),
-(4, 1, 'Alimento Húmedo Pollo 385g', 'Lata de alimento húmedo sabor pollo. Ideal para perros convalecientes o senior.', 45.00, 'images/lata_pollo.jpg', 0, 1),
-(5, 1, 'Alimento Húmedo Res 385g', 'Lata de alimento húmedo sabor res. Receta gourmet para perros exigentes.', 45.00, 'images/lata_res.jpg', 0, 1),
-(6, 1, 'Galletas Premio Hueso', 'Galletas en forma de hueso para premiar a tu mascota. Paquete de 500g.', 89.00, 'images/galletas_hueso.jpg', 0, 1),
-(7, 1, 'Snacks Dentales', 'Snacks especiales para limpieza dental. Reduce el sarro y refresca el aliento.', 129.00, 'images/snacks_dental.jpg', 0, 1),
-(8, 2, 'Antiparasitario Interno 4 tabs', 'Tabletas desparasitantes de amplio espectro. Elimina lombrices y parásitos intestinales.', 189.00, 'images/antiparasitario_tabs.jpg', 1, 1),
-(9, 2, 'Antipulgas Spray 250ml', 'Spray antipulgas de acción inmediata. Elimina pulgas, garrapatas y piojos.', 229.00, 'images/antipulgas_spray.jpg', 1, 1),
-(10, 2, 'Vitaminas Multivit 60 tabs', 'Suplemento vitamínico completo. Fortalece el sistema inmunológico.', 349.00, 'images/vitaminas.jpg', 1, 1),
-(11, 2, 'Shampoo Medicado 500ml', 'Shampoo medicado para problemas de piel. Alivia comezón y dermatitis.', 269.00, 'images/shampoo_medicado.jpg', 1, 1),
-(12, 2, 'Gotas Óticas 30ml', 'Gotas para infecciones de oído. Tratamiento antibacteriano y antimicótico.', 159.00, 'images/gotas_oido.jpg', 1, 1),
-(13, 3, 'Collar Cuero Mediano', 'Collar de cuero genuino, ajustable de 35-45cm. Herrajes resistentes.', 189.00, 'images/collar_cuero.jpg', 0, 1),
-(14, 3, 'Correa Retráctil 5m', 'Correa retráctil de 5 metros para perros hasta 25kg. Sistema de freno automático.', 299.00, 'images/correa_retractil.jpg', 0, 1),
-(15, 3, 'Plato Doble Antideslizante', 'Comedero doble de acero inoxidable con base antideslizante.', 149.00, 'images/plato_doble.jpg', 0, 1),
-(16, 3, 'Cama Mediana 60cm', 'Cama acolchonada lavable, ideal para perros medianos. Material impermeable.', 599.00, 'images/cama_mediana.jpg', 0, 1),
-(17, 3, 'Transportadora Mediana', 'Transportadora plástica con ventilación. Aprobada para viajes aéreos.', 899.00, 'images/transportadora.jpg', 0, 1),
-(18, 3, 'Arnés Ajustable Talla M', 'Arnés ergonómico que distribuye mejor la presión. Talla mediana.', 249.00, 'images/arnes.jpg', 0, 1),
-(19, 4, 'Shampoo Neutro 500ml', 'Shampoo pH neutro para uso frecuente. No irrita la piel sensible.', 119.00, 'images/shampoo_neutro.jpg', 0, 1),
-(20, 4, 'Acondicionador 500ml', 'Acondicionador que desenreda y da brillo al pelaje. Aroma duradero.', 139.00, 'images/acondicionador.jpg', 0, 1),
-(21, 4, 'Cepillo Doble Cara', 'Cepillo con cerdas suaves de un lado y peine metálico del otro.', 89.00, 'images/cepillo.jpg', 0, 1),
-(22, 4, 'Cortauñas Profesional', 'Cortauñas de acero inoxidable con seguro. Para perros medianos y grandes.', 149.00, 'images/cortaunas.jpg', 0, 1),
-(23, 4, 'Toallitas Húmedas 80pz', 'Toallitas húmedas hipoalalergénicas para limpieza rápida. Aroma lavanda.', 79.00, 'images/toallitas.jpg', 0, 1),
-(24, 4, 'Perfume Perros 120ml', 'Colonia suave de larga duración. No irrita el olfato del perro.', 99.00, 'images/perfume.jpg', 0, 1),
-(25, 5, 'Pelota Tenis Pack 3', 'Pack de 3 pelotas de tenis especiales para perros. Material resistente.', 79.00, 'images/pelotas_tenis.jpg', 0, 1),
-(26, 5, 'Hueso Goma Grande', 'Hueso de goma termoplástica resistente. Ideal para mordedores fuertes.', 129.00, 'images/hueso_goma.jpg', 0, 1),
-(27, 5, 'Cuerda Nudo 30cm', 'Cuerda de algodón con nudos para juego de tira y afloja.', 69.00, 'images/cuerda_nudo.jpg', 0, 1),
-(28, 5, 'Frisbee Flotante', 'Frisbee de material suave que flota en el agua. Colores surtidos.', 89.00, 'images/frisbee.jpg', 0, 1),
-(29, 5, 'Peluche Pato con Sonido', 'Peluche de pato que emite sonido al presionar. Material lavable.', 99.00, 'images/peluche_pato.jpg', 0, 1),
-(30, 5, 'Kong Classic Mediano', 'Juguete Kong original rellenable. Ayuda a reducir la ansiedad.', 199.00, 'images/kong.jpg', 0, 1),
-(31, 5, 'Pelota con Luz LED', 'Pelota que se ilumina al rebotar. Ideal para jugar en la oscuridad.', 119.00, 'images/pelota_led.jpg', 0, 1);
+INSERT INTO `producto` (`id_producto`, `id_categoria`, `nombre`, `descripcion`, `precio_venta`, `imagen`, `caducidad`, `id_usuario_creador`, `fecha_creacion`, `fecha_modificacion`, `es_medicamento`, `activo`) VALUES
+(1, 1, 'Croquetas Premium Cachorro 2kg', 'Alimento balanceado para cachorros de 2 a 12 meses. Rico en proteínas y vitaminas esenciales para el crecimiento.', 299.00, 'images/croquetas_cachorro.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(2, 1, 'Croquetas Premium Adulto 5kg', 'Alimento completo para perros adultos de todas las razas. Fórmula balanceada con omega 3 y 6.', 499.00, 'images/croquetas_adulto.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(3, 1, 'Croquetas Light 3kg', 'Alimento bajo en calorías para perros con sobrepeso. Ayuda a mantener el peso ideal.', 389.00, 'images/croquetas_light.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(4, 1, 'Alimento Húmedo Pollo 385g', 'Lata de alimento húmedo sabor pollo. Ideal para perros convalecientes o senior.', 45.00, 'images/lata_pollo.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(5, 1, 'Alimento Húmedo Res 385g', 'Lata de alimento húmedo sabor res. Receta gourmet para perros exigentes.', 45.00, 'images/lata_res.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(6, 1, 'Galletas Premio Hueso', 'Galletas en forma de hueso para premiar a tu mascota. Paquete de 500g.', 89.00, 'images/galletas_hueso.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(7, 1, 'Snacks Dentales', 'Snacks especiales para limpieza dental. Reduce el sarro y refresca el aliento.', 129.00, 'images/snacks_dental.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(8, 2, 'Antiparasitario Interno 4 tabs', 'Tabletas desparasitantes de amplio espectro. Elimina lombrices y parásitos intestinales.', 189.00, 'images/antiparasitario_tabs.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 1, 1),
+(9, 2, 'Antipulgas Spray 250ml', 'Spray antipulgas de acción inmediata. Elimina pulgas, garrapatas y piojos.', 229.00, 'images/antipulgas_spray.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 1, 1),
+(10, 2, 'Vitaminas Multivit 60 tabs', 'Suplemento vitamínico completo. Fortalece el sistema inmunológico.', 349.00, 'images/vitaminas.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 1, 1),
+(11, 2, 'Shampoo Medicado 500ml', 'Shampoo medicado para problemas de piel. Alivia comezón y dermatitis.', 269.00, 'images/shampoo_medicado.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 1, 1),
+(12, 2, 'Gotas Óticas 30ml', 'Gotas para infecciones de oído. Tratamiento antibacteriano y antimicótico.', 159.00, 'images/gotas_oido.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 1, 1),
+(13, 3, 'Collar Cuero Mediano', 'Collar de cuero genuino, ajustable de 35-45cm. Herrajes resistentes.', 189.00, 'images/collar_cuero.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(14, 3, 'Correa Retráctil 5m', 'Correa retráctil de 5 metros para perros hasta 25kg. Sistema de freno automático.', 299.00, 'images/correa_retractil.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(15, 3, 'Plato Doble Antideslizante', 'Comedero doble de acero inoxidable con base antideslizante.', 149.00, 'images/plato_doble.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(16, 3, 'Cama Mediana 60cm', 'Cama acolchonada lavable, ideal para perros medianos. Material impermeable.', 599.00, 'images/cama_mediana.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(17, 3, 'Transportadora Mediana', 'Transportadora plástica con ventilación. Aprobada para viajes aéreos.', 899.00, 'images/transportadora.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(18, 3, 'Arnés Ajustable Talla M', 'Arnés ergonómico que distribuye mejor la presión. Talla mediana.', 249.00, 'images/arnes.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(19, 4, 'Shampoo Neutro 500ml', 'Shampoo pH neutro para uso frecuente. No irrita la piel sensible.', 119.00, 'images/shampoo_neutro.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(20, 4, 'Acondicionador 500ml', 'Acondicionador que desenreda y da brillo al pelaje. Aroma duradero.', 139.00, 'images/acondicionador.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(21, 4, 'Cepillo Doble Cara', 'Cepillo con cerdas suaves de un lado y peine metálico del otro.', 89.00, 'images/cepillo.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(22, 4, 'Cortauñas Profesional', 'Cortauñas de acero inoxidable con seguro. Para perros medianos y grandes.', 149.00, 'images/cortaunas.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(23, 4, 'Toallitas Húmedas 80pz', 'Toallitas húmedas hipoalalergénicas para limpieza rápida. Aroma lavanda.', 79.00, 'images/toallitas.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(24, 4, 'Perfume Perros 120ml', 'Colonia suave de larga duración. No irrita el olfato del perro.', 99.00, 'images/perfume.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(25, 5, 'Pelota Tenis Pack 3', 'Pack de 3 pelotas de tenis especiales para perros. Material resistente.', 79.00, 'images/pelotas_tenis.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(26, 5, 'Hueso Goma Grande', 'Hueso de goma termoplástica resistente. Ideal para mordedores fuertes.', 129.00, 'images/hueso_goma.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(27, 5, 'Cuerda Nudo 30cm', 'Cuerda de algodón con nudos para juego de tira y afloja.', 69.00, 'images/cuerda_nudo.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(28, 5, 'Frisbee Flotante', 'Frisbee de material suave que flota en el agua. Colores surtidos.', 89.00, 'images/frisbee.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(29, 5, 'Peluche Pato con Sonido', 'Peluche de pato que emite sonido al presionar. Material lavable.', 99.00, 'images/peluche_pato.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(30, 5, 'Kong Classic Mediano', 'Juguete Kong original rellenable. Ayuda a reducir la ansiedad.', 199.00, 'images/kong.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(31, 5, 'Pelota con Luz LED', 'Pelota que se ilumina al rebotar. Ideal para jugar en la oscuridad.', 119.00, 'images/pelota_led.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -250,14 +270,37 @@ CREATE TABLE `producto_imagen` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `registro_actividad`
+--
+
+CREATE TABLE `registro_actividad` (
+  `id_registro` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `tipo_accion` varchar(50) NOT NULL,
+  `tabla_afectada` varchar(50) NOT NULL,
+  `id_registro_afectado` int(11) DEFAULT NULL,
+  `descripcion` text NOT NULL,
+  `fecha_accion` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `usuario`
 --
 
 CREATE TABLE `usuario` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(120) NOT NULL,
+  `apellido` varchar(80) DEFAULT NULL,
   `email` varchar(160) NOT NULL,
   `password_hash` varchar(255) NOT NULL,
+  `curp` varchar(18) DEFAULT NULL,
+  `fecha_nacimiento` date DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `telefono` varchar(40) DEFAULT NULL,
+  `fecha_registro` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_ultima_modificacion` datetime DEFAULT NULL,
   `rol` enum('admin','operador') NOT NULL DEFAULT 'admin',
   `activo` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -266,9 +309,10 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `password_hash`, `rol`, `activo`) VALUES
-(1, 'Administrador', 'admin@elperrito.local', '$2y$10$knT6D6Wzv4TQq2r3Q5QnNub0iWj7gI.7y0gq0l8L8mQZp5s6b8pO2', 'admin', 1),
-(2, 'Administrador', 'administrador@elperrito.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1);
+INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `email`, `password_hash`, `curp`, `fecha_nacimiento`, `direccion`, `telefono`, `fecha_registro`, `fecha_ultima_modificacion`, `rol`, `activo`) VALUES
+(1, 'Administrador', NULL, 'admin@elperrito.local', '$2y$10$knT6D6Wzv4TQq2r3Q5QnNub0iWj7gI.7y0gq0l8L8mQZp5s6b8pO2', NULL, NULL, NULL, NULL, '2025-10-29 09:25:01', NULL, 'admin', 1),
+(2, 'Administrador', NULL, 'administrador@elperrito.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, NULL, NULL, NULL, '2025-10-29 09:25:01', NULL, 'admin', 1),
+(9, 'Emmanuel', 'Velasquez Ortiz', 'admin123@elperrito.com', '$2y$10$8ut1OrwNzSSZXiFfUSGBTe3WowzWz2cM9c17XThRmLSeP5.cE/Mva', NULL, NULL, 'Oaxaca', '9511160653', '2025-10-30 09:56:52', NULL, 'admin', 1);
 
 -- --------------------------------------------------------
 
@@ -327,6 +371,14 @@ ALTER TABLE `detalle_venta`
   ADD KEY `fk_dventa_prod` (`id_producto`);
 
 --
+-- Indices de la tabla `historial_usuario`
+--
+ALTER TABLE `historial_usuario`
+  ADD PRIMARY KEY (`id_historial`),
+  ADD KEY `fk_historial_usuario` (`id_usuario`),
+  ADD KEY `fk_historial_modificador` (`id_usuario_modificador`);
+
+--
 -- Indices de la tabla `inventario`
 --
 ALTER TABLE `inventario`
@@ -337,7 +389,9 @@ ALTER TABLE `inventario`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`id_producto`),
-  ADD KEY `fk_prod_cat` (`id_categoria`);
+  ADD KEY `fk_prod_cat` (`id_categoria`),
+  ADD KEY `idx_producto_activo` (`activo`),
+  ADD KEY `idx_producto_creador` (`id_usuario_creador`);
 
 --
 -- Indices de la tabla `producto_imagen`
@@ -347,11 +401,21 @@ ALTER TABLE `producto_imagen`
   ADD KEY `fk_pimg_producto` (`id_producto`);
 
 --
+-- Indices de la tabla `registro_actividad`
+--
+ALTER TABLE `registro_actividad`
+  ADD PRIMARY KEY (`id_registro`),
+  ADD KEY `fk_registro_usuario` (`id_usuario`),
+  ADD KEY `idx_fecha_accion` (`fecha_accion`),
+  ADD KEY `idx_tabla_afectada` (`tabla_afectada`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `idx_usuario_rol` (`rol`);
 
 --
 -- Indices de la tabla `venta`
@@ -395,6 +459,12 @@ ALTER TABLE `detalle_venta`
   MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT de la tabla `historial_usuario`
+--
+ALTER TABLE `historial_usuario`
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
@@ -407,10 +477,16 @@ ALTER TABLE `producto_imagen`
   MODIFY `id_imagen` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `registro_actividad`
+--
+ALTER TABLE `registro_actividad`
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
@@ -443,6 +519,13 @@ ALTER TABLE `detalle_venta`
   ADD CONSTRAINT `fk_dventa_venta` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `historial_usuario`
+--
+ALTER TABLE `historial_usuario`
+  ADD CONSTRAINT `fk_historial_modificador` FOREIGN KEY (`id_usuario_modificador`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_historial_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `inventario`
 --
 ALTER TABLE `inventario`
@@ -452,13 +535,20 @@ ALTER TABLE `inventario`
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
-  ADD CONSTRAINT `fk_prod_cat` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_prod_cat` FOREIGN KEY (`id_categoria`) REFERENCES `categoria` (`id_categoria`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_producto_usuario` FOREIGN KEY (`id_usuario_creador`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto_imagen`
 --
 ALTER TABLE `producto_imagen`
   ADD CONSTRAINT `fk_pimg_producto` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `registro_actividad`
+--
+ALTER TABLE `registro_actividad`
+  ADD CONSTRAINT `fk_registro_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `venta`

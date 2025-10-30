@@ -58,11 +58,22 @@ try {
     
     $out = [];
     while ($r = $st->fetch()) {
+        // Asegurar que la imagen siempre tenga "images/" al inicio
+        $imagen_path = 'images/placeholder.png';
+        if ($r['imagen']) {
+            // Si la imagen ya tiene "images/" al inicio, no duplicar
+            if (strpos($r['imagen'], 'images/') === 0) {
+                $imagen_path = $r['imagen'];
+            } else {
+                $imagen_path = 'images/' . $r['imagen'];
+            }
+        }
+
         $out[] = [
             'id_producto' => (int)$r['id_producto'],
             'nombre' => $r['nombre'],
             'precio_venta' => (float)$r['precio_venta'],
-            'imagen' => $r['imagen'] ?: 'images/placeholder.png'
+            'imagen' => $imagen_path
         ];
     }
     
