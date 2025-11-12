@@ -214,6 +214,7 @@
     font-size: 14px;
 }
 
+
 /* Modal */
 .modal {
     display: none;
@@ -311,16 +312,47 @@
     .tabs {
         overflow-x: auto;
     }
-    
+
     .form-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .search-bar {
         flex-wrap: wrap;
     }
-    
+
     .table-wrapper {
         font-size: 14px;
     }
+}
+
+/* /modificarcolorxp */
+.btn-custom-color {
+    background-color: rgb(165, 165, 226);
+    color: #fff;
+    /* Assuming white text for contrast */
+    border: none;
+    cursor: pointer;
+}
+
+.btn-cart-custom-color {
+    background-color: green;
+    color: #fff;
+    /* Assuming white text for contrast */
+    border: none;
+    cursor: pointer;
+}
+
+.btn-history-custom-color {
+    background-color: rgb(161, 120, 44);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-activity-custom-color {
+    background-color: rgb(121, 51, 121);
+    color: #fff;
+    border: none;
+    cursor: pointer;
 }

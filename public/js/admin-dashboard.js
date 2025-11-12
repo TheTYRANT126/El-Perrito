@@ -353,8 +353,8 @@ async function loadUsuarios() {
                 <td>
                     <div class="action-buttons">
                         <button class="btn-small btn-edit" onclick="editarUsuario(${usuario.id_usuario})">Actualizar</button>
-                        <button class="btn-small btn-view" onclick="verHistorialUsuario(${usuario.id_usuario})">Historial</button>
-                        <button class="btn-small btn-view" onclick="verActividadUsuario(${usuario.id_usuario})">Registro</button>
+                        <button class="btn-small btn-history-custom-color" onclick="verHistorialUsuario(${usuario.id_usuario})">Historial</button>
+                        <button class="btn-small btn-activity-custom-color" onclick="verActividadUsuario(${usuario.id_usuario})">Registro</button>
                     </div>
                 </td>
             `;
@@ -436,8 +436,8 @@ async function loadClientes() {
                 <td>
                     <div class="action-buttons">
                         <button class="btn-small btn-edit" onclick="editarCliente(${cliente.id_cliente})">Actualizar</button>
-                        <button class="btn-small btn-view" onclick="verCarritoCliente(${cliente.id_cliente})">Carrito</button>
-                        <button class="btn-small btn-primary" onclick="verHistorialCliente(${cliente.id_cliente})">Compras</button> //xp
+                        <button class="btn-small btn-cart-custom-color" onclick="verCarritoCliente(${cliente.id_cliente})">Carrito</button>
+                        <button class="btn-small btn-custom-color" onclick="verHistorialCliente(${cliente.id_cliente})">Compras</button>
                     </div>
                 </td>
             `;
