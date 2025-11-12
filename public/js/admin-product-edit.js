@@ -1,7 +1,9 @@
 // Admin Product Edit - Sistema de edición y creación de productos
 
 const productId = new URLSearchParams(window.location.search).get('id');
+const fromTabParam = new URLSearchParams(window.location.search).get('from_tab');
 const isEdit = !!productId;
+const fromTab = fromTabParam || 'productos';
 
 // Elementos DOM
 const form = document.getElementById('productForm');
@@ -24,9 +26,16 @@ const MAX_IMAGES = 4;
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', async () => {
+    // Actualizar el enlace de "Volver al Panel"
+    const backLink = document.querySelector('a[href="admin-dashboard.html"]');
+    if (backLink) {
+        backLink.href = `admin-dashboard.html#${fromTab}`;
+    }
+
     console.log('=== Inicializando admin-product-edit ===');
     console.log('Product ID:', productId);
     console.log('Modo edición:', isEdit);
+    console.log('Volver a la pestaña:', fromTab);
 
     // Verificar sesión de administrador
     await checkAdminSession();
@@ -42,6 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         productIdBadge.textContent = `ID: ${productId}`;
         productIdBadge.style.display = 'inline-block';
         productIdInput.value = productId;
+
+        // Cambiar texto del botón de submit a "Actualizar"
+        document.querySelector('#productForm button[type="submit"]').textContent = 'Actualizar Producto';
 
         console.log('⏳ Cargando datos del producto...');
         await loadProductData();
@@ -432,7 +444,7 @@ async function handleSubmit(e) {
         // Si es creación, redirigir a edición después de un momento
         if (!isEdit) {
             setTimeout(() => {
-                window.location.href = `admin-product-edit.html?id=${idProducto}`;
+                window.location.href = `admin-product-edit.html?id=${idProducto}&from_tab=${fromTab}`;
             }, 1500);
         } else {
             // Si es edición, recargar imágenes y limpiar newImages

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Historial de Compras</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <style>
+        .order-card {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .order-header {
+            background: #f8f9fa;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .order-header h3 {
+            margin: 0;
+            color: #2c5db5;
+        }
+        .order-body {
+            padding: 20px;
+        }
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .order-table th, .order-table td {
+            text-align: left;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .order-table th {
+            color: #64748b;
+            font-weight: 600;
+        }
+        .order-table tr:last-child td {
+            border-bottom: none;
+        }
+        .product-cell {
+            display: flex;
+            align-items: center;
+        }
+        .product-cell img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 16px;
+        }
+    </style>
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="index.html">Inicio</a>
+            <a id="accountLink" href="account.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+                <h1 style="color:#2c5db5; font-size:36px; margin:0;">Historial de Compras</h1>
+                <p id="clientName" style="color:#64748b; font-size:18px; margin:8px 0 0 0;"></p>
+            </div>
+            <button class="btn outline" onclick="window.history.back()">← Volver</button>
+        </div>
+
+        <div id="ordersContainer">
+            <div class="card" style="text-align: center; padding: 40px;">
+                <p>Cargando historial de compras...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/header.js"></script>
+    <script src="js/admin-client-orders.js"></script>
+</body>
+
+</html>

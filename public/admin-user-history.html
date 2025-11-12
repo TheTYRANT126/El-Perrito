@@ -61,6 +61,13 @@
         (async function init() {
             const urlParams = new URLSearchParams(window.location.search);
             userId = urlParams.get('id');
+            const fromTab = urlParams.get('from_tab') || 'usuarios';
+
+            // Actualizar el enlace de "Volver al Panel"
+            const backLink = document.querySelector('a[href="admin-dashboard.html"]');
+            if (backLink) {
+                backLink.href = `admin-dashboard.html#${fromTab}`;
+            }
 
             if (!userId) {
                 alert('ID de usuario no especificado');

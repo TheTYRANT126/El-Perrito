@@ -81,17 +81,20 @@
 
                     <hr style="margin: 24px 0; border: none; border-top: 1px solid #e5e7eb;">
 
-                    <h3 id="passwordSectionTitle" style="color:#2c5db5; margin-bottom:16px;">Cambiar Contraseña (Opcional)</h3>
-                    <p id="passwordSectionDesc" style="color:#64748b; font-size:14px; margin-bottom:16px;">Deja este campo vacío si no deseas cambiar la contraseña.</p>
+                    <h3 id="passwordSectionTitle" style="color:#2c5db5; margin-bottom:16px;">Cambiar Contraseña
+                        (Opcional)</h3>
+                    <p id="passwordSectionDesc" style="color:#64748b; font-size:14px; margin-bottom:16px;">Deja este
+                        campo vacío si no deseas cambiar la contraseña.</p>
 
                     <div class="form-group">
-                        <label for="nueva_password"><span id="passwordLabel">Nueva Contraseña</span> <span id="passwordRequired" style="display:none; color:#d00000;">*</span></label>
+                        <label for="nueva_password"><span id="passwordLabel">Nueva Contraseña</span> <span
+                                id="passwordRequired" style="display:none; color:#d00000;">*</span></label>
                         <input type="password" id="nueva_password" name="nueva_password" minlength="6">
                     </div>
 
                     <div class="form-actions">
                         <button type="button" class="btn outline" onclick="window.history.back()">Cancelar</button>
-                        <button type="submit" class="btn primary">Guardar Cambios</button>
+                        <button type="submit" class="btn primary">Actualizar Usuario</button>
                     </div>
                 </form>
 
@@ -103,11 +106,14 @@
                 <div class="card" style="margin-bottom:16px;">
                     <h3 style="color:#2c5db5; margin-top:0;">Información</h3>
                     <p style="margin:8px 0;"><strong>Fecha de ingreso:</strong> <span id="fechaRegistro">-</span></p>
-                    <p style="margin:8px 0;"><strong>Última modificación:</strong> <span id="fechaModificacion">-</span></p>
+                    <p style="margin:8px 0;"><strong>Última modificación:</strong> <span id="fechaModificacion">-</span>
+                    </p>
 
                     <div style="margin-top:16px;">
-                        <button class="btn outline" style="width:100%; margin-bottom:8px;" onclick="verHistorialCompleto()">📋 Ver Historial Completo</button>
-                        <button class="btn outline" style="width:100%;" onclick="verRegistroCompleto()">📊 Ver Registro de Actividad</button>
+                        <button class="btn outline" style="width:100%; margin-bottom:8px;"
+                            onclick="verHistorialCompleto()">Ver Historial Completo</button>
+                        <button class="btn outline" style="width:100%;" onclick="verRegistroCompleto()">Ver Registro
+                            de Actividad</button>
                     </div>
                 </div>
 
@@ -125,11 +131,25 @@
     <script>
         let userId = null;
         let isEdit = false;
+        let fromTab = 'productos'; // Valor por defecto
 
         (async function init() {
             const urlParams = new URLSearchParams(window.location.search);
             userId = urlParams.get('id');
             isEdit = !!userId;
+
+            // Leer el parámetro 'from_tab' para saber a dónde volver
+            const tabParam = urlParams.get('from_tab');
+            if (tabParam) {
+                fromTab = tabParam;
+            }
+
+            // Actualizar el enlace de "Volver al Panel"
+            const backLink = document.querySelector('a[href="admin-dashboard.html"]');
+            if (backLink) {
+                backLink.href = `admin-dashboard.html#${fromTab}`;
+            }
+
 
             if (isEdit) {
                 // Modo edición
@@ -138,7 +158,7 @@
                 await loadHistorialReciente(userId);
             } else {
                 // Modo creación
-                document.getElementById('pageTitle').textContent = 'Crear Usuario';
+                document.getElementById('pageTitle').textContent = 'Registrar Usuario';
 
                 // Cambiar layout a una sola columna
                 document.getElementById('mainLayout').style.gridTemplateColumns = '1fr';
@@ -151,6 +171,9 @@
                 document.getElementById('passwordSectionDesc').textContent = 'La contraseña es obligatoria al crear un nuevo usuario.';
                 document.getElementById('passwordRequired').style.display = 'inline';
                 document.getElementById('nueva_password').required = true;
+
+                // Cambiar texto del botón a "Registrar"
+                document.querySelector('#userForm button[type="submit"]').textContent = 'Registrar Usuario';
             }
 
             setupForm();
@@ -244,7 +267,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('historialReciente').innerHTML = 
+                document.getElementById('historialReciente').innerHTML =
                     '<p style="color:#d00000; text-align:center;">Error al cargar historial</p>';
             }
         }
@@ -283,9 +306,9 @@
                             await loadUser(userId);
                             await loadHistorialReciente(userId);
                         } else {
-                            // Redirigir al dashboard después de crear
+                            // Redirigir al dashboard después de crear, a la pestaña correcta
                             setTimeout(() => {
-                                window.location.href = 'admin-dashboard.html';
+                                window.location.href = `admin-dashboard.html#${fromTab}`;
                             }, 1500);
                         }
                     } else {

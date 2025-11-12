@@ -13,8 +13,19 @@ let userName = '';
 (async function init() {
     await checkAdminAccess();
     setupTabs();
-    setupSearchHandlers();
+
+    // Determinar la pestaña inicial desde el hash de la URL
+    const initialTab = window.location.hash.replace('#', '');
+    if (initialTab && document.querySelector(`.tab[data-tab="${initialTab}"]`)) {
+        currentTab = initialTab;
+    } else {
+        currentTab = 'productos';
+        window.location.hash = currentTab; // Opcional: asegurar que el hash esté presente
+    }
+    
+    activateTab(currentTab);
     loadCurrentTab();
+    setupSearchHandlers();
 })();
 
 // Verificar acceso y obtener información del usuario
@@ -61,6 +72,24 @@ function updateHeader() {
     }
 }
 
+// Activar visualmente una pestaña
+function activateTab(tabName) {
+    // Remover clase active de todas las pestañas y contenidos
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+    // Activar la pestaña y contenido correctos
+    const tabToActivate = document.querySelector(`.tab[data-tab="${tabName}"]`);
+    const contentToActivate = document.getElementById(`${tabName}-content`);
+
+    if (tabToActivate) {
+        tabToActivate.classList.add('active');
+    }
+    if (contentToActivate) {
+        contentToActivate.classList.add('active');
+    }
+}
+
 // Configurar sistema de pestañas
 function setupTabs() {
     const tabs = document.querySelectorAll('.tab');
@@ -68,16 +97,13 @@ function setupTabs() {
         tab.addEventListener('click', () => {
             if (tab.disabled) return;
             
-            // Remover clase active de todas las pestañas
-            tabs.forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            // Activar pestaña seleccionada
-            tab.classList.add('active');
             const tabName = tab.dataset.tab;
-            document.getElementById(`${tabName}-content`).classList.add('active');
-            
+            if (currentTab === tabName) return; // No hacer nada si ya está activa
+
             currentTab = tabName;
+            window.location.hash = tabName; // Actualiza el hash en la URL
+            
+            activateTab(tabName);
             loadCurrentTab();
         });
     });
@@ -105,12 +131,12 @@ function setupSearchHandlers() {
     });
     
     document.getElementById('btnCrearProducto').onclick = () => {
-        window.location.href = 'admin-product-edit.html';
+        window.location.href = `admin-product-edit.html?from_tab=${currentTab}`;
     };
 
     // Usuarios
     document.getElementById('btnCrearUsuario').onclick = () => {
-        window.location.href = 'admin-user-edit.html';
+        window.location.href = `admin-user-edit.html?from_tab=${currentTab}`;
     };
     document.getElementById('btnSearchUsuarios').onclick = () => {
         currentPage.usuarios = 1;
@@ -213,7 +239,7 @@ async function loadProductos() {
                 <td>${estadoBadge}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-small btn-edit" onclick="editarProducto(${producto.id_producto})">Editar</button>
+                        <button class="btn-small btn-edit" onclick="editarProducto(${producto.id_producto})">Actualizar</button>
                         <button class="btn-small btn-delete" onclick="eliminarProducto(${producto.id_producto}, '${producto.nombre}')">Eliminar</button>
                     </div>
                 </td>
@@ -232,7 +258,7 @@ async function loadProductos() {
 }
 
 function editarProducto(id) {
-    window.location.href = `admin-product-edit.html?id=${id}`;
+    window.location.href = `admin-product-edit.html?id=${id}&from_tab=${currentTab}`;
 }
 
 async function eliminarProducto(id, nombre) {
@@ -326,7 +352,7 @@ async function loadUsuarios() {
                 <td>${fechaStr}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-small btn-edit" onclick="editarUsuario(${usuario.id_usuario})">Editar</button>
+                        <button class="btn-small btn-edit" onclick="editarUsuario(${usuario.id_usuario})">Actualizar</button>
                         <button class="btn-small btn-view" onclick="verHistorialUsuario(${usuario.id_usuario})">Historial</button>
                         <button class="btn-small btn-view" onclick="verActividadUsuario(${usuario.id_usuario})">Registro</button>
                     </div>
@@ -346,15 +372,15 @@ async function loadUsuarios() {
 }
 
 function editarUsuario(id) {
-    window.location.href = `admin-user-edit.html?id=${id}`;
+    window.location.href = `admin-user-edit.html?id=${id}&from_tab=${currentTab}`;
 }
 
 function verHistorialUsuario(id) {
-    window.location.href = `admin-user-history.html?id=${id}`;
+    window.location.href = `admin-user-history.html?id=${id}&from_tab=${currentTab}`;
 }
 
 function verActividadUsuario(id) {
-    window.location.href = `admin-user-activity.html?id=${id}`;
+    window.location.href = `admin-user-activity.html?id=${id}&from_tab=${currentTab}`;
 }
 
 // ===== CLIENTES =====
@@ -409,9 +435,9 @@ async function loadClientes() {
                 <td>${fechaStr}</td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn-small btn-edit" onclick="editarCliente(${cliente.id_cliente})">Editar</button>
+                        <button class="btn-small btn-edit" onclick="editarCliente(${cliente.id_cliente})">Actualizar</button>
                         <button class="btn-small btn-view" onclick="verCarritoCliente(${cliente.id_cliente})">Carrito</button>
-                        <button class="btn-small btn-view" onclick="verHistorialCliente(${cliente.id_cliente})">Compras</button>
+                        <button class="btn-small btn-primary" onclick="verHistorialCliente(${cliente.id_cliente})">Compras</button> //xp
                     </div>
                 </td>
             `;
@@ -429,15 +455,15 @@ async function loadClientes() {
 }
 
 function editarCliente(id) {
-    window.location.href = `admin-client-edit.html?id=${id}`;
+    window.location.href = `admin-client-edit.html?id=${id}&from_tab=${currentTab}`;
 }
 
 function verCarritoCliente(id) {
-    window.location.href = `admin-client-cart.html?id=${id}`;
+    window.location.href = `admin-client-cart.html?id=${id}&from_tab=${currentTab}`;
 }
 
 function verHistorialCliente(id) {
-    window.location.href = `admin-client-orders.html?id=${id}`;
+    window.location.href = `admin-client-orders.html?id=${id}&from_tab=${currentTab}`;
 }
 
 // ===== PAGINACIÓN =====
