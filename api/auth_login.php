@@ -19,23 +19,39 @@ if (!$email || !$password) {
 
 try {
     // Cliente
-    $st = $pdo->prepare("SELECT id_cliente, password_hash, nombre FROM CLIENTE WHERE email=:e LIMIT 1");
+    $st = $pdo->prepare("SELECT id_cliente, password_hash, nombre, estado FROM CLIENTE WHERE email=:e LIMIT 1");
     $st->execute([':e'=>$email]);
     if ($u = $st->fetch()) {
         if (password_verify($password, $u['password_hash'])) {
+            // Verificar que el cliente esté activo
+            if ($u['estado'] !== 'activo') {
+                http_response_code(403);
+                ob_end_clean();
+                echo 'Cuenta inactiva. Contacte al administrador.';
+                exit;
+            }
+
             $_SESSION['cliente_id'] = (int)$u['id_cliente'];
             $_SESSION['cliente_nombre'] = $u['nombre'];
             ob_end_clean(); // Limpiamos el buffer antes de enviar
-            echo 'OK_CLIENTE'; 
+            echo 'OK_CLIENTE';
             exit;
         }
     }
-    
-    // Admin
-    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, apellido, rol FROM USUARIO WHERE email=:e LIMIT 1");
+
+    // Admin/Operador
+    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, apellido, rol, activo FROM USUARIO WHERE email=:e LIMIT 1");
     $st->execute([':e'=>$email]);
     if ($s = $st->fetch()) {
         if (password_verify($password, $s['password_hash'])) {
+            // Verificar que el usuario esté activo
+            if ($s['activo'] != 1) {
+                http_response_code(403);
+                ob_end_clean();
+                echo 'Usuario inactivo. Contacte al administrador.';
+                exit;
+            }
+
             $_SESSION['usuario_id'] = (int)$s['id_usuario'];
             $_SESSION['usuario_nombre'] = $s['nombre'];
             $_SESSION['usuario_apellido'] = $s['apellido'];

@@ -18,16 +18,29 @@ $offset = ($page - 1) * $per_page;
 $search = trim($_GET['q'] ?? '');
 
 try {
-    // Construir query con búsqueda
+    // Construir query con búsqueda y filtros
     $where = "1=1";
     $params = [];
-    
+
+    // Búsqueda por nombre, apellido o email
     if ($search !== '') {
         $where .= " AND (nombre LIKE ? OR apellido LIKE ? OR email LIKE ?)";
         $search_param = '%' . $search . '%';
         $params[] = $search_param;
         $params[] = $search_param;
         $params[] = $search_param;
+    }
+
+    // Filtro por rol (admin u operador)
+    if (!empty($_GET['rol']) && in_array($_GET['rol'], ['admin', 'operador'])) {
+        $where .= " AND rol = ?";
+        $params[] = $_GET['rol'];
+    }
+
+    // Filtro por estado activo/inactivo
+    if (isset($_GET['activo']) && $_GET['activo'] !== '') {
+        $where .= " AND activo = ?";
+        $params[] = (int)$_GET['activo'];
     }
     
     // Contar total de usuarios

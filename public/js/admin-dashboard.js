@@ -1,7 +1,8 @@
 // admin-dashboard.js - Panel de Administración
 
-let currentTab = 'productos';
+let currentTab = 'dashboard';
 let currentPage = {
+    dashboard: 1,
     productos: 1,
     usuarios: 1,
     clientes: 1
@@ -19,7 +20,7 @@ let userName = '';
     if (initialTab && document.querySelector(`.tab[data-tab="${initialTab}"]`)) {
         currentTab = initialTab;
     } else {
-        currentTab = 'productos';
+        currentTab = 'dashboard';
         window.location.hash = currentTab; // Opcional: asegurar que el hash esté presente
     }
     
@@ -56,19 +57,25 @@ async function checkAdminAccess() {
 function updateHeader() {
     const title = document.getElementById('adminTitle');
     const subtitle = document.getElementById('adminSubtitle');
-    
+
     const roleName = userRole === 'admin' ? 'Administrador' : 'Operador';
     title.textContent = `${roleName}: ${userName}`;
-    
+
     // Deshabilitar pestañas según el rol
     if (userRole === 'operador') {
         document.getElementById('tabUsuarios').disabled = true;
         document.getElementById('tabUsuarios').style.opacity = '0.5';
         document.getElementById('tabUsuarios').style.cursor = 'not-allowed';
-        
+
         document.getElementById('tabClientes').disabled = true;
         document.getElementById('tabClientes').style.opacity = '0.5';
         document.getElementById('tabClientes').style.cursor = 'not-allowed';
+
+        // Aplicar vista de operador al dashboard
+        const dashboardContent = document.getElementById('dashboard-content');
+        if (dashboardContent) {
+            dashboardContent.classList.add('operador-view');
+        }
     }
 }
 
@@ -179,6 +186,9 @@ function setupSearchHandlers() {
 // Cargar pestaña actual
 function loadCurrentTab() {
     switch(currentTab) {
+        case 'dashboard':
+            loadDashboardStats();
+            break;
         case 'productos':
             loadProductos();
             break;
@@ -500,4 +510,175 @@ function updatePagination(type, paginationData) {
         loadCurrentTab();
     };
     container.appendChild(nextBtn);
+}
+
+// ========================================
+// DASHBOARD: Estadísticas y Métricas
+// ========================================
+
+async function loadDashboardStats() {
+    try {
+        const response = await fetch('../api/admin_dashboard_stats.php', {
+            credentials: 'include'
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al cargar estadísticas');
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !data.stats) {
+            throw new Error('Respuesta inválida del servidor');
+        }
+
+        const stats = data.stats;
+
+        // Función para formatear moneda
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value || 0);
+        };
+
+        // Ventas
+        document.getElementById('ventasHoy').textContent = formatCurrency(stats.ventas_hoy);
+        document.getElementById('ventasMes').textContent = formatCurrency(stats.ventas_mes);
+        document.getElementById('ordenesHoy').textContent = stats.ordenes_hoy || 0;
+
+        // Tendencia de ventas
+        const tendenciaVentas = parseFloat(stats.tendencia_ventas || 0);
+        const tendenciaVentasEl = document.getElementById('tendenciaVentas');
+        if (tendenciaVentas > 0) {
+            tendenciaVentasEl.textContent = `↑ +${tendenciaVentas.toFixed(1)}% vs mes anterior`;
+            tendenciaVentasEl.style.color = '#28a745';
+        } else if (tendenciaVentas < 0) {
+            tendenciaVentasEl.textContent = `↓ ${tendenciaVentas.toFixed(1)}% vs mes anterior`;
+            tendenciaVentasEl.style.color = '#dc3545';
+        } else {
+            tendenciaVentasEl.textContent = `Sin cambios vs mes anterior`;
+            tendenciaVentasEl.style.color = '#6c757d';
+        }
+
+        // Inventario
+        document.getElementById('productosActivos').textContent = stats.productos_activos || 0;
+        document.getElementById('stockBajo').textContent = stats.productos_stock_bajo || 0;
+        document.getElementById('productosAgotados').textContent = stats.productos_agotados || 0;
+
+        // Clientes
+        document.getElementById('totalClientes').textContent = stats.total_clientes || 0;
+        document.getElementById('clientesNuevosMes').textContent = stats.clientes_nuevos_mes || 0;
+
+        // Tendencia de clientes
+        const tendenciaClientes = parseFloat(stats.tendencia_clientes || 0);
+        const tendenciaClientesEl = document.getElementById('tendenciaClientes');
+        if (tendenciaClientes > 0) {
+            tendenciaClientesEl.textContent = `↑ +${tendenciaClientes.toFixed(1)}% vs mes anterior`;
+            tendenciaClientesEl.style.color = '#28a745';
+        } else if (tendenciaClientes < 0) {
+            tendenciaClientesEl.textContent = `↓ ${tendenciaClientes.toFixed(1)}% vs mes anterior`;
+            tendenciaClientesEl.style.color = '#dc3545';
+        } else {
+            tendenciaClientesEl.textContent = `Sin cambios vs mes anterior`;
+            tendenciaClientesEl.style.color = '#6c757d';
+        }
+
+        // Top 5 Productos Más Vendidos
+        renderTopProductos(stats.top_productos || []);
+
+        // Actividades Recientes
+        renderActividadesRecientes(stats.actividades_recientes || []);
+
+    } catch (error) {
+        console.error('Error cargando estadísticas del dashboard:', error);
+
+        // Mostrar mensaje de error
+        document.getElementById('topProductos').innerHTML = '<p style="text-align: center; color: #dc3545;">Error al cargar datos</p>';
+        document.getElementById('actividadesRecientes').innerHTML = '<p style="text-align: center; color: #dc3545;">Error al cargar datos</p>';
+    }
+}
+
+function renderTopProductos(productos) {
+    const container = document.getElementById('topProductos');
+
+    if (!productos || productos.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p class="empty-state-text">No hay datos de ventas este mes</p></div>';
+        return;
+    }
+
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(value || 0);
+    };
+
+    let html = '<table class="dashboard-table">';
+    html += '<thead><tr><th>#</th><th>Producto</th><th>Vendido</th><th>Ingresos</th></tr></thead>';
+    html += '<tbody>';
+
+    productos.forEach((p, index) => {
+        html += '<tr>';
+        html += `<td style="font-weight: 600; color: #64748b;">${index + 1}</td>`;
+        html += `<td style="font-weight: 600;">${escapeHtml(p.nombre)}</td>`;
+        html += `<td><span style="background: #f0f7ff; padding: 4px 8px; border-radius: 6px; font-weight: 600; color: #2c5db5;">${p.total_vendido} unidades</span></td>`;
+        html += `<td style="font-weight: 700; color: #10b981;">${formatCurrency(p.ingresos)}</td>`;
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+}
+
+function renderActividadesRecientes(actividades) {
+    const container = document.getElementById('actividadesRecientes');
+
+    if (!actividades || actividades.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p class="empty-state-text">No hay actividades recientes</p></div>';
+        return;
+    }
+
+    let html = '<div class="activity-list">';
+
+    actividades.forEach(act => {
+        const fecha = new Date(act.fecha_accion);
+        const fechaStr = fecha.toLocaleString('es-MX', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const usuario = `${act.usuario_nombre || ''} ${act.usuario_apellido || ''}`.trim();
+
+        html += '<div class="activity-item">';
+        html += `<div style="display: flex; justify-content: space-between; align-items: start;">`;
+        html += `<div style="flex: 1;">`;
+        html += `<div><span class="activity-type">${escapeHtml(act.tipo_accion)}</span> <span class="activity-description">${escapeHtml(act.descripcion)}</span></div>`;
+        html += `<div class="activity-meta">`;
+        html += `<span class="activity-user">👤 ${escapeHtml(usuario)}</span>`;
+        html += `<span style="color: #cbd5e1;">•</span>`;
+        html += `<span>${escapeHtml(act.usuario_rol)}</span>`;
+        html += `</div>`;
+        html += `</div>`;
+        html += `<span class="activity-timestamp">🕐 ${fechaStr}</span>`;
+        html += `</div>`;
+        html += '</div>';
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Función auxiliar para escapar HTML y prevenir XSS
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }

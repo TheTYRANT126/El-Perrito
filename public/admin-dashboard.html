@@ -28,13 +28,88 @@
 
         <!-- Pestañas -->
         <div class="tabs">
-            <button class="tab active" data-tab="productos">Productos</button>
+            <button class="tab active" data-tab="dashboard">Dashboard</button>
+            <button class="tab" data-tab="productos">Productos</button>
             <button class="tab" data-tab="usuarios" id="tabUsuarios">Usuarios</button>
             <button class="tab" data-tab="clientes" id="tabClientes">Clientes</button>
         </div>
 
+        <!-- Contenido de Dashboard -->
+        <div class="tab-content active" id="dashboard-content">
+            <div class="stats-grid">
+                <!-- Ventas (Solo Admin) -->
+                <div class="stat-card admin-only">
+                    <h3>Ventas Hoy</h3>
+                    <p class="stat-value" id="ventasHoy">$0.00</p>
+                    <p class="stat-label">Total del día</p>
+                </div>
+
+                <div class="stat-card admin-only">
+                    <h3>Ventas del Mes</h3>
+                    <p class="stat-value" id="ventasMes">$0.00</p>
+                    <p class="stat-trend" id="tendenciaVentas"></p>
+                </div>
+
+                <div class="stat-card admin-only">
+                    <h3>Órdenes Hoy</h3>
+                    <p class="stat-value" id="ordenesHoy">0</p>
+                    <p class="stat-label">Pedidos procesados</p>
+                </div>
+
+                <!-- Inventario (Todos) -->
+                <div class="stat-card success">
+                    <h3>Productos Activos</h3>
+                    <p class="stat-value" id="productosActivos">0</p>
+                    <p class="stat-label">En catálogo</p>
+                </div>
+
+                <div class="stat-card warning">
+                    <h3>Stock Bajo</h3>
+                    <p class="stat-value" id="stockBajo">0</p>
+                    <p class="stat-label">Productos por reabastecer</p>
+                </div>
+
+                <div class="stat-card danger">
+                    <h3>Agotados</h3>
+                    <p class="stat-value" id="productosAgotados">0</p>
+                    <p class="stat-label">Sin existencias</p>
+                </div>
+
+                <!-- Clientes (Solo Admin) -->
+                <div class="stat-card admin-only">
+                    <h3>Total Clientes</h3>
+                    <p class="stat-value" id="totalClientes">0</p>
+                    <p class="stat-label">Registrados</p>
+                </div>
+
+                <!-- Clientes Nuevos (Solo Admin) -->
+                <div class="stat-card admin-only">
+                    <h3>Clientes Nuevos Este Mes</h3>
+                    <p class="stat-value" id="clientesNuevosMes">0</p>
+                    <p class="stat-trend" id="tendenciaClientes"></p>
+                </div>
+            </div>
+
+            <!-- Top Productos y Actividades Recientes (Solo Admin) -->
+            <div class="dashboard-row admin-only">
+                <div class="card" style="flex: 1;">
+                    <h3>Top 5 Productos Más Vendidos</h3>
+                    <div id="topProductos" style="margin-top: 1rem;">
+                        <p style="text-align: center; color: #999;">Cargando...</p>
+                    </div>
+                </div>
+
+                <div class="card" style="flex: 1;">
+                    <h3>Actividades Recientes</h3>
+                    <div id="actividadesRecientes" style="margin-top: 1rem;">
+                        <p style="text-align: center; color: #999;">Cargando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Contenido de Productos -->
-        <div class="tab-content active" id="productos-content">
+        <div class="tab-content" id="productos-content">
             <div class="card">
                 <div class="search-bar">
                     <input type="text" id="searchProductos" placeholder="Buscar por nombre o ID">
