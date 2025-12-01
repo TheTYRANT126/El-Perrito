@@ -7,14 +7,14 @@
  * URL: http://localhost/elperrito/api/migrate_images.php
  */
 
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 
 header('Content-Type: text/html; charset=utf-8');
 
 echo "<h1>Migración de Imágenes de Productos</h1>";
 echo "<p>Renombrando imágenes a convención imagen1.jpg, imagen2.jpg...</p>";
 
-$images_dir = __DIR__ . '/../public/images';
+$images_dir = dirname(__DIR__) . '/src/assets/icon';
 $migrated = 0;
 $errors = [];
 
@@ -107,7 +107,7 @@ try {
         echo "<p style='color: green;'>✓ Migración completada sin errores</p>";
     }
 
-    echo "<p><a href='../public/index.html'>← Volver al inicio</a></p>";
+    echo "<p><a href='../index.html'>← Volver al inicio</a></p>";
 
 } catch (Exception $e) {
     echo "<p style='color: red;'><strong>Error:</strong> " . $e->getMessage() . "</p>";

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/../lib/logger.php';
 
@@ -7,6 +7,8 @@ require_once __DIR__ . '/../lib/logger.php';
 check_admin_session();
 
 header('Content-Type: application/json; charset=utf-8');
+
+$productoCrud = new \Spide\PUelperrito\Database\CrudProducto($pdo);
 
 $id_producto = (int)($_POST['id_producto'] ?? 0);
 
@@ -28,7 +30,7 @@ if (!$producto) {
 }
 
 // Crear directorio si no existe
-$upload_dir = __DIR__ . '/../public/images/' . $id_producto . '_product';
+$upload_dir = dirname(__DIR__) . '/src/assets/icon/' . $id_producto . '_product';
 if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0755, true);
 }
@@ -156,13 +158,16 @@ if (count($uploaded_files) > 0) {
         'editar',
         'PRODUCTO',
         $id_producto,
-        "Subió " . count($uploaded_files) . " imagen(es) al producto '{$producto['nombre']}'"
+        sprintf("Subió %d imagen(es) al producto '%s'", count($uploaded_files), $producto['nombre'])
     );
 }
 
 echo json_encode([
     'success' => true,
-    'uploaded' => $uploaded_files,
+    'uploaded' => array_map(
+        static fn (string $path) => $productoCrud->normalizarRutaImagen($path),
+        $uploaded_files
+    ),
     'errors' => $errors,
     'total_images' => $existing_count + count($uploaded_files)
 ]);

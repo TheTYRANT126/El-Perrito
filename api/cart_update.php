@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_login_cliente();
 $id_item = (int)($_POST['id_item'] ?? 0);

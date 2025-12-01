@@ -56,11 +56,11 @@ async function load() {
       const prod = document.createElement('div');
       prod.className = 'prod';
       const img = document.createElement('img');
-      img.src = it.imagen || 'images/placeholder.png';
+      img.src = it.imagen || '../src/assets/icon/placeholder.png';
       img.alt = it.nombre;
       img.onerror = function () {
         console.warn('Error cargando imagen:', this.src);
-        this.src = 'images/placeholder.png';
+        this.src = '../src/assets/icon/placeholder.png';
       };
 
       const namebox = document.createElement('div');
@@ -117,7 +117,7 @@ async function load() {
 
       const del = document.createElement('button');
       del.className = 'trash';
-      del.innerHTML = '<img src="images/basurero.png" alt="Eliminar" style="width: 30px; height: 30px;">'; del.onclick = async () => {
+      del.innerHTML = '<img src="../src/assets/icon/basurero.png" alt="Eliminar" style="width: 30px; height: 30px;">'; del.onclick = async () => {
         await update(it.id_item, 0);
       };
 

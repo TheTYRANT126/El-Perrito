@@ -18,7 +18,7 @@ async function loadUserInfo() {
         if (!response.ok) {
             msg.textContent = 'Error: Debes iniciar sesión';
             msg.style.color = '#d00000';
-            setTimeout(() => window.location.href = 'login.html', 2000);
+            setTimeout(() => window.location.href = '../login.html', 2000);
             return;
         }
 
@@ -79,7 +79,7 @@ deleteForm.addEventListener('submit', async (e) => {
 
             // Redirigir al inicio después de 3 segundos
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = '../index.html';
             }, 3000);
         } else if (response.status === 401) {
             msg.textContent = 'Contraseña incorrecta';

@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 
 // Verificar sesión de admin o operador
 check_admin_session();
 
+$productoCrud = new \Spide\PUelperrito\Database\CrudProducto($pdo);
 header('Content-Type: application/json; charset=utf-8');
 
 $id = (int)($_GET['id'] ?? 0);
@@ -38,16 +39,18 @@ try {
         echo json_encode(['error' => 'Producto no encontrado']);
         exit;
     }
+
+    $producto['imagen'] = $productoCrud->normalizarRutaImagen($producto['imagen'] ?? null);
     
     // Obtener imágenes del producto
-    $img_dir = __DIR__ . '/../public/images/' . $id . '_product';
+    $img_dir = dirname(__DIR__) . '/src/assets/icon/' . $id . '_product';
     $imagenes = [];
     
     if (is_dir($img_dir)) {
         $files = scandir($img_dir);
         foreach ($files as $file) {
             if ($file !== '.' && $file !== '..' && preg_match('/\.(jpg|jpeg|png|gif)$/i', $file)) {
-                $imagenes[] = $id . '_product/' . $file;
+                $imagenes[] = $productoCrud->normalizarRutaImagen($id . '_product/' . $file);
             }
         }
     }

@@ -1,8 +1,9 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_login_admin();
 
+$productoCrud = new \Spide\PUelperrito\Database\CrudProducto($pdo);
 // Solo admins pueden acceder
 if ($_SESSION['usuario_rol'] !== 'admin') {
     http_response_code(403);
@@ -58,11 +59,7 @@ try {
 
         // Normalizar rutas de imágenes
         foreach ($items as &$item) {
-            if ($item['imagen_producto'] && strpos($item['imagen_producto'], 'images/') !== 0) {
-                $item['imagen_producto'] = 'images/' . $item['imagen_producto'];
-            } elseif (!$item['imagen_producto']) {
-                $item['imagen_producto'] = 'images/placeholder.png';
-            }
+            $item['imagen_producto'] = $productoCrud->normalizarRutaImagen($item['imagen_producto'] ?? null);
         }
         unset($item);
 

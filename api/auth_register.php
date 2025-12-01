@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Limpiar buffer previo
 if (ob_get_level()) {

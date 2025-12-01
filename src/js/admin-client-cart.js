@@ -60,7 +60,7 @@ async function loadClientCart(clientId) {
 
             tr.innerHTML = `
                 <td>${item.nombre_producto}</td>
-                <td><img src="${item.imagen_producto || 'images/placeholder.png'}" alt="${item.nombre_producto}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='images/placeholder.png'"></td>
+                <td><img src="${item.imagen_producto || '../src/assets/icon/placeholder.png'}" alt="${item.nombre_producto}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" onerror="this.src='../src/assets/icon/placeholder.png'"></td>
                 <td>$${Number(item.precio_venta).toFixed(2)}</td>
                 <td>${item.cantidad}</td>
                 <td>$${subtotal.toFixed(2)}</td>

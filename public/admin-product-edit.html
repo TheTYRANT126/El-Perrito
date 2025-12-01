@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>El Perrito — Editar Producto</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/admin-dashboard.css">
     <style>
         .product-edit-container {
             max-width: 1200px;
@@ -137,11 +137,11 @@
 
 <body class="bg">
     <header class="header">
-        <a href="index.html"><img class="logo" src="images/logo.png" alt="El Perrito"></a>
+        <a href="../index.html"><img class="logo" src="../src/assets/icon/logo.png" alt="El Perrito"></a>
         <nav class="nav">
             <a href="admin-dashboard.html">← Volver al Panel</a>
-            <a href="index.html">Inicio</a>
-            <a id="accountLink" href="account.html">Cuenta</a>
+            <a href="../index.html">Inicio</a>
+            <a id="accountLink" href="../login.html">Cuenta</a>
         </nav>
     </header>
 
@@ -150,7 +150,7 @@
             <!-- Sección de imágenes -->
             <div class="image-section">
                 <div class="main-image-container">
-                    <img id="mainImage" class="main-image" src="images/placeholder.png" alt="Producto">
+                    <img id="mainImage" class="main-image" src="../src/assets/icon/placeholder.png" alt="Producto">
                 </div>
 
                 <div class="thumbnails" id="thumbnails">
@@ -241,8 +241,8 @@
         </div>
     </div>
 
-    <script src="js/header.js"></script>
-    <script src="js/admin-product-edit.js"></script>
+    <script type="module" src="../src/js/header.js"></script>
+    <script src="../src/js/admin-product-edit.js"></script>
 </body>
 
 </html>

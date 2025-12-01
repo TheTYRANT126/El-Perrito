@@ -1,7 +1,7 @@
 <?php
 ob_start(); 
 require_once __DIR__ . '/../lib/session.php';
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 
 ob_clean();
 

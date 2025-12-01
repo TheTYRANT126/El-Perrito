@@ -1,10 +1,11 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 
 // Verificar sesión de admin o operador
 check_admin_session();
 
+$productoCrud = new \Spide\PUelperrito\Database\CrudProducto($pdo);
 header('Content-Type: application/json; charset=utf-8');
 
 $page = max(1, (int)($_GET['page'] ?? 1));
@@ -110,14 +111,7 @@ try {
 
     // Normalizar las rutas de las imágenes
     foreach ($productos as &$producto) {
-        if ($producto['imagen']) {
-            // Si no tiene "images/" al inicio, agregarlo
-            if (strpos($producto['imagen'], 'images/') !== 0) {
-                $producto['imagen'] = 'images/' . $producto['imagen'];
-            }
-        } else {
-            $producto['imagen'] = 'images/placeholder.png';
-        }
+        $producto['imagen'] = $productoCrud->normalizarRutaImagen($producto['imagen'] ?? null);
     }
     unset($producto); // Romper la referencia
 

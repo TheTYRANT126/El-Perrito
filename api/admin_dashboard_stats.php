@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../lib/auth.php';
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 
 // Requiere autenticación como admin u operador
 require_login_admin();

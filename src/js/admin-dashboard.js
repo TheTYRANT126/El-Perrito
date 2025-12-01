@@ -37,7 +37,7 @@ async function checkAdminAccess() {
 
         if (data.status !== 'admin') {
             alert('Acceso denegado. Solo personal autorizado puede acceder.');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
             return;
         }
 
@@ -49,7 +49,7 @@ async function checkAdminAccess() {
 
     } catch (error) {
         console.error('Error verificando acceso:', error);
-        window.location.href = 'login.html';
+        window.location.href = '../login.html';
     }
 }
 
@@ -242,7 +242,7 @@ async function loadProductos() {
             
             tr.innerHTML = `
                 <td>${producto.id_producto}</td>
-                <td><img src="${producto.imagen || 'images/placeholder.png'}" alt="${producto.nombre}" onerror="this.src='images/placeholder.png'"></td>
+                <td><img src="${producto.imagen || '../src/assets/icon/placeholder.png'}" alt="${producto.nombre}" onerror="this.src='../src/assets/icon/placeholder.png'"></td>
                 <td>${producto.nombre}</td>
                 <td>$${Number(producto.precio_venta).toFixed(2)}</td>
                 <td>${producto.existencia} unidades</td>

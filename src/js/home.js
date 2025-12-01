@@ -1,3 +1,5 @@
+import { apiUrl, assetUrl, pageUrl } from './endPoints.js';
+
 const grid = document.getElementById('grid');
 const q = document.getElementById('q');
 const btnBuscar = document.getElementById('btnBuscar');
@@ -8,6 +10,10 @@ const listaCategorias = document.getElementById('listaCategorias');
 const btnHist = document.getElementById('btnHist');
 const panelHist = document.getElementById('panelHist');
 const histList = document.getElementById('histList');
+
+const categoriesEndpoint = apiUrl('categories_list.php');
+const productsEndpoint = apiUrl('products_list.php');
+const placeholderImage = assetUrl('icon/placeholder.png');
 document.addEventListener('DOMContentLoaded', function () {
     const grid = document.getElementById('grid');
 
@@ -52,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (listaCategorias.childElementCount === 0) {
                 try {
                     console.log('Cargando categorías...');
-                    const response = await fetch('../api/categories_list.php');
+                    const response = await fetch(categoriesEndpoint);
 
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}`);
@@ -128,7 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (q.value) params.set('q', q.value);
             if (selectedCat > 0) params.set('cat', selectedCat);
 
-            const url = '../api/products_list.php?' + params.toString();
+            const url = new URL(productsEndpoint, window.location.origin);
+            url.search = params.toString();
             console.log('URL de búsqueda:', url);
 
             const response = await fetch(url);
@@ -168,13 +175,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Imagen
                 const img = document.createElement('img');
-                img.src = p.imagen || 'images/placeholder.png';
+                img.src = p.imagen || placeholderImage;
                 img.alt = p.nombre;
                 img.onerror = function () {
                     console.warn('Imagen no encontrada:', this.src);
-                    this.src = 'images/placeholder.png';
+                    this.src = placeholderImage;
                 };
-                img.onclick = () => location.href = 'product.html?id=' + p.id_producto;
+                const productPage = `${pageUrl('public/product.html')}?id=${p.id_producto}`;
+                img.onclick = () => { location.href = productPage; };
                 img.style.cursor = 'pointer';
 
                 // Nombre
@@ -222,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     try {
                         console.log('Agregando producto:', p.id_producto, 'cantidad:', n.value);
 
-                        const r = await fetch('../api/cart_add.php', {
+                        const r = await fetch(apiUrl('cart_add.php'), {
                             method: 'POST',
                             credentials: 'include',
                             body: new URLSearchParams({
@@ -237,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (!r.ok) {
                             if (r.status === 401 || responseText.includes('NO_LOGIN')) {
                                 alert('Inicia sesión para agregar al carrito');
-                                window.location.href = 'login.html';
+                                window.location.href = pageUrl('login.html');
                             } else {
                                 alert('Error al agregar al carrito: ' + responseText);
                             }

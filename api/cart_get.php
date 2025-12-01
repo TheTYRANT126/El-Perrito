@@ -1,8 +1,10 @@
 <?php
-require_once __DIR__ . '/../lib/db.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/../lib/auth.php';
 require_once __DIR__ . '/cart_helpers.php'; 
 require_login_cliente();
+
+$productoCrud = new \Spide\PUelperrito\Database\CrudProducto($pdo);
 
 $cid = (int)$_SESSION['cliente_id'];
 $id_carrito = cart_get_or_create($cid, $pdo);
@@ -18,14 +20,7 @@ $items = $st->fetchAll();
 
 // Normalizar las rutas de las imágenes
 foreach ($items as &$item) {
-    if ($item['imagen']) {
-        // Si no tiene "images/" al inicio, agregarlo
-        if (strpos($item['imagen'], 'images/') !== 0) {
-            $item['imagen'] = 'images/' . $item['imagen'];
-        }
-    } else {
-        $item['imagen'] = 'images/placeholder.png';
-    }
+    $item['imagen'] = $productoCrud->normalizarRutaImagen($item['imagen'] ?? null);
 }
 unset($item); // Romper la referencia
 

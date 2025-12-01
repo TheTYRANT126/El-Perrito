@@ -89,12 +89,12 @@ async function checkAdminSession() {
 
         if (session.status !== 'admin') {
             alert('No tienes permisos para acceder a esta página');
-            window.location.href = 'login.html';
+            window.location.href = '../login.html';
         }
     } catch (error) {
         console.error('Error verificando sesión:', error);
         alert('Debes iniciar sesión como administrador');
-        window.location.href = 'login.html';
+        window.location.href = '../login.html';
     }
 }
 
@@ -181,9 +181,12 @@ async function loadProductImages() {
         currentImages = [];
 
         if (data.imagenes && data.imagenes.length > 0) {
-            // Las imágenes ya vienen con la ruta relativa desde la API
             data.imagenes.forEach(img => {
-                currentImages.push('images/' + img);
+                if (typeof img === 'string') {
+                    currentImages.push(img);
+                } else if (img && img.url) {
+                    currentImages.push(img.url);
+                }
             });
         }
 
@@ -219,7 +222,7 @@ function renderImages() {
     });
 
     if (allImages.length === 0) {
-        mainImage.src = 'images/placeholder.png';
+        mainImage.src = '../src/assets/icon/placeholder.png';
         return;
     }
 
