@@ -134,22 +134,9 @@ async function load() {
     subinfo.innerHTML = `<strong>(${count} producto${count !== 1 ? 's' : ''}): $${subtotal.toFixed(2)}</strong>`;
     pay.disabled = false;
 
-    // Configurar botón de pago
+    // Configurar botón de pago - abrir modal de selección de dirección
     pay.onclick = async () => {
-      if (confirm('¿Confirmar compra?')) {
-        const r = await fetch('../api/cart_checkout.php', {
-          method: 'POST',
-          credentials: 'include',
-          body: new URLSearchParams()
-        });
-        const t = await r.text();
-        if (r.ok && t === 'OK') {
-          alert('¡Compra realizada con éxito!');
-          load();
-        } else {
-          alert('Error al procesar la compra: ' + (t || 'Error desconocido'));
-        }
-      }
+      openAddressModal();
     };
 
   } catch (error) {
@@ -208,6 +195,187 @@ async function checkSessionAndLoad() {
   }
 }
 
+// =========================
+// Selección de Dirección de Envío
+// =========================
+let selectedAddressId = null;
+
+function openAddressModal() {
+  const modal = document.getElementById('modal-select-address');
+  modal.style.display = 'flex';
+  loadAddressesForCheckout();
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+async function loadAddressesForCheckout() {
+  const addressSelector = document.getElementById('address-selector');
+  addressSelector.innerHTML = '<p style="text-align:center; color:#999">Cargando direcciones...</p>';
+
+  try {
+    const response = await fetch('../api/address_list.php', { credentials: 'include' });
+    if (!response.ok) {
+      throw new Error('Error al cargar direcciones');
+    }
+
+    const addresses = await response.json();
+
+    if (!Array.isArray(addresses) || addresses.length === 0) {
+      addressSelector.innerHTML = `
+        <p style="text-align:center; color:#999">No tienes direcciones guardadas.</p>
+        <p style="text-align:center; margin-top:12px">
+          <a href="account.html" class="btn primary">Agrega una dirección primero</a>
+        </p>
+      `;
+      document.getElementById('btn-confirm-checkout').disabled = true;
+      return;
+    }
+
+    let html = '';
+    // Seleccionar automáticamente la dirección predeterminada
+    let defaultFound = false;
+
+    addresses.forEach((addr, index) => {
+      const isPredeterminada = addr.es_predeterminada == 1;
+      const isFromProfile = addr.from_profile == 1;
+      const direccionCompleta = `${addr.calle} ${addr.numero_exterior || ''} ${addr.numero_interior || ''}, ${addr.colonia}, ${addr.ciudad}, ${addr.estado} CP ${addr.codigo_postal}`;
+
+      if (isPredeterminada && !defaultFound) {
+        selectedAddressId = addr.id_direccion;
+        defaultFound = true;
+      }
+
+      const isSelected = (isPredeterminada && index === 0) || (!defaultFound && index === 0);
+
+      html += `<div class="address-option ${isSelected ? 'selected' : ''}" data-id="${addr.id_direccion}">`;
+      html += `<label style="display:flex; cursor:pointer; width:100%">`;
+      html += `<input type="radio" name="address" value="${addr.id_direccion}" ${isSelected ? 'checked' : ''}>`;
+      html += '<div style="flex:1">';
+
+      // Badges
+      if (isFromProfile) {
+        html += '<span class="badge badge-warning" style="margin-bottom:8px">Del Perfil</span> ';
+      }
+      if (isPredeterminada) {
+        html += '<span class="badge badge-primary" style="margin-bottom:8px">Predeterminada</span><br>';
+      }
+
+      html += `<strong>${addr.nombre_completo}</strong><br>`;
+      html += `<span style="color:var(--muted)">${direccionCompleta}</span><br>`;
+      html += `<span style="color:var(--muted); font-size:14px">Tel: ${addr.telefono}</span>`;
+      if (addr.referencias && addr.referencias !== 'Dirección del perfil (requiere actualización)') {
+        html += `<br><span style="color:var(--muted); font-size:14px">Ref: ${addr.referencias}</span>`;
+      }
+
+      // Advertencia para direcciones del perfil
+      if (isFromProfile) {
+        html += `<br><small style="color:#856404">⚠️ Te recomendamos actualizar esta dirección con datos completos</small>`;
+      }
+
+      html += '</div>';
+      html += '</label>';
+      html += '</div>';
+    });
+
+    addressSelector.innerHTML = html;
+
+    // Si no hay predeterminada, seleccionar la primera
+    if (!defaultFound && addresses.length > 0) {
+      selectedAddressId = addresses[0].id_direccion;
+    }
+
+    // Agregar event listeners
+    document.querySelectorAll('.address-option').forEach(option => {
+      option.addEventListener('click', function() {
+        // Quitar selección de todos
+        document.querySelectorAll('.address-option').forEach(opt => {
+          opt.classList.remove('selected');
+          opt.querySelector('input[type="radio"]').checked = false;
+        });
+        // Seleccionar este
+        this.classList.add('selected');
+        this.querySelector('input[type="radio"]').checked = true;
+        selectedAddressId = this.getAttribute('data-id');
+      });
+    });
+
+    document.getElementById('btn-confirm-checkout').disabled = false;
+
+  } catch (error) {
+    addressSelector.innerHTML = '<p style="text-align:center; color:#dc2626">Error al cargar las direcciones</p>';
+    document.getElementById('btn-confirm-checkout').disabled = true;
+    console.error(error);
+  }
+}
+
+async function confirmCheckout() {
+  if (!selectedAddressId) {
+    alert('Por favor selecciona una dirección de envío');
+    return;
+  }
+
+  if (!confirm('¿Confirmar compra con la dirección seleccionada?')) {
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append('id_direccion_envio', selectedAddressId);
+
+    const r = await fetch('../api/cart_checkout.php', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData
+    });
+
+    const t = await r.text();
+
+    if (r.ok && t === 'OK') {
+      alert('¡Compra realizada con éxito!');
+      closeModal('modal-select-address');
+      load();
+    } else {
+      alert('Error al procesar la compra: ' + (t || 'Error desconocido'));
+    }
+
+  } catch (error) {
+    alert('Error al procesar la compra');
+    console.error(error);
+  }
+}
+
+// Event listeners para modales
+document.addEventListener('DOMContentLoaded', () => {
+  // Cerrar modales
+  document.querySelectorAll('.modal-close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const modalId = e.target.getAttribute('data-modal');
+      closeModal(modalId);
+    });
+  });
+
+  // Cerrar modal al hacer click fuera
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  });
+
+  // Botón de confirmar checkout
+  const btnConfirmCheckout = document.getElementById('btn-confirm-checkout');
+  if (btnConfirmCheckout) {
+    btnConfirmCheckout.addEventListener('click', confirmCheckout);
+  }
+});
+
+// Inicializar carrito
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', checkSessionAndLoad);
 } else {

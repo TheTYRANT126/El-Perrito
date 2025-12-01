@@ -37,6 +37,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de Selección de Dirección -->
+  <div id="modal-select-address" class="modal" style="display:none">
+    <div class="modal-content" style="max-width:700px">
+      <div class="modal-header">
+        <h2>Selecciona Dirección de Envío</h2>
+        <span class="modal-close" data-modal="modal-select-address">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div id="address-selector" class="address-selector">
+          <p style="text-align:center; color:#999">Cargando direcciones...</p>
+        </div>
+        <div style="margin-top:20px; display:flex; gap:12px; justify-content:flex-end">
+          <a href="account.html" class="btn outline">Gestionar Direcciones</a>
+          <button id="btn-confirm-checkout" class="btn success">Confirmar Compra</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script type="module" src="../src/js/header.js"></script>
   <script src="../src/js/cart.js"></script>
 </body>

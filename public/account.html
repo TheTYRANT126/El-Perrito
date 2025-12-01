@@ -24,12 +24,135 @@
         <div class="account-grid">
             <a class="tile" href="#" id="tile-history">Historial de compras</a>
             <a class="tile" href="#">Tarjetas</a>
-            <a class="tile" href="#">Dirección de envío</a>
+            <a class="tile" href="#" id="tile-address">Dirección de envío</a>
             <a class="tile" href="#" id="tile-profile">Cambiar datos</a>
             <a class="tile" href="#" id="tile-delete">Eliminar cuenta</a>
             <a class="tile" href="#" id="tile-logout">Cerrar Sesión</a>
         </div>
-        <!-- <div id="drawer" class="card" style="margin-top:20px; display:none"></div> -->
+    </div>
+
+    <!-- Modal de Historial de Compras -->
+    <div id="modal-history" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Historial de Compras</h2>
+                <span class="modal-close" data-modal="modal-history">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="history-list">
+                    <p style="text-align:center; color:#999">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalle de Compra -->
+    <div id="modal-order-detail" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalle de Compra</h2>
+                <span class="modal-close" data-modal="modal-order-detail">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="order-detail-info"></div>
+                <div id="order-detail-items" style="margin-top:20px"></div>
+                <div id="order-cancel-section" style="margin-top:20px; text-align:center; display:none">
+                    <button class="btn danger" id="btn-cancel-order">Cancelar Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Direcciones de Envío -->
+    <div id="modal-address" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Mis Direcciones de Envío</h2>
+                <span class="modal-close" data-modal="modal-address">&times;</span>
+            </div>
+            <div class="modal-body">
+                <button class="btn success" id="btn-add-address" style="margin-bottom:20px">+ Agregar Nueva Dirección</button>
+                <div id="address-list">
+                    <p style="text-align:center; color:#999">Cargando...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Agregar/Editar Dirección -->
+    <div id="modal-address-form" class="modal" style="display:none">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="address-form-title">Nueva Dirección</h2>
+                <span class="modal-close" data-modal="modal-address-form">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="form-address">
+                    <input type="hidden" id="input-id-direccion" name="id_direccion">
+
+                    <div class="form-group">
+                        <label for="input-nombre-completo">Nombre completo del destinatario *</label>
+                        <input type="text" id="input-nombre-completo" name="nombre_completo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-telefono">Teléfono *</label>
+                        <input type="tel" id="input-telefono" name="telefono" required>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:12px">
+                        <div class="form-group">
+                            <label for="input-calle">Calle *</label>
+                            <input type="text" id="input-calle" name="calle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-num-ext">Núm. Ext</label>
+                            <input type="text" id="input-num-ext" name="numero_exterior">
+                        </div>
+                        <div class="form-group">
+                            <label for="input-num-int">Núm. Int</label>
+                            <input type="text" id="input-num-int" name="numero_interior">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-colonia">Colonia *</label>
+                        <input type="text" id="input-colonia" name="colonia" required>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+                        <div class="form-group">
+                            <label for="input-ciudad">Ciudad *</label>
+                            <input type="text" id="input-ciudad" name="ciudad" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-estado">Estado *</label>
+                            <input type="text" id="input-estado" name="estado" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-cp">Código Postal *</label>
+                        <input type="text" id="input-cp" name="codigo_postal" maxlength="5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="input-referencias">Referencias (opcional)</label>
+                        <textarea id="input-referencias" name="referencias" rows="3" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:10px"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer">
+                            <input type="checkbox" id="input-predeterminada" name="es_predeterminada" value="1">
+                            <span>Marcar como dirección predeterminada</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn primary" style="width:100%; margin-top:12px">Guardar Dirección</button>
+                </form>
+                <p id="address-form-message" style="margin-top:12px; text-align:center; display:none"></p>
+            </div>
+        </div>
     </div>
     <script type="module" src="../src/js/header.js"></script>
     <script src="../src/js/account.js"></script>

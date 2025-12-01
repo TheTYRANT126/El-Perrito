@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Editar Cliente</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/admin-dashboard.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html"><img class="logo" src="../src/assets/icon/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="../index.html">Inicio</a>
+            <a id="accountLink" href="../login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 800px;">
+        <h1 style="color:#2c5db5; font-size:36px; margin-bottom:24px;">Editar Cliente</h1>
+
+        <div class="card">
+            <h2 style="color:#2c5db5; margin-top:0;">Datos del Cliente</h2>
+
+            <form id="clientForm">
+                <input type="hidden" id="clientId" name="id_cliente">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido">Apellido *</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono">
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion">
+                </div>
+
+                <div class="form-group" style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px;">
+                    <p style="margin:8px 0;"><strong>Fecha de registro:</strong> <span id="fechaRegistro">-</span></p>
+                    <p style="margin:8px 0;"><strong>Estado:</strong> <span id="estado">-</span></p>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn outline" onclick="window.history.back()">Cancelar</button>
+                    <button type="submit" class="btn primary">Actualizar Cliente</button>
+                </div>
+            </form>
+
+            <p id="msg" style="margin-top:16px; font-weight:600;"></p>
+        </div>
+    </div>
+
+    <script type="module" src="../src/js/header.js"></script>
+    <script>
+        let clientId = null;
+        let fromTab = 'clientes';
+
+        (async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            clientId = urlParams.get('id');
+
+            // Leer el parámetro 'from_tab' para saber a dónde volver
+            const tabParam = urlParams.get('from_tab');
+            if (tabParam) {
+                fromTab = tabParam;
+            }
+
+            // Actualizar el enlace de "Volver al Panel"
+            const backLink = document.querySelector('a[href="admin-dashboard.html"]');
+            if (backLink) {
+                backLink.href = `admin-dashboard.html#${fromTab}`;
+            }
+
+            if (!clientId) {
+                alert('ID de cliente no especificado');
+                window.history.back();
+                return;
+            }
+
+            await loadClient(clientId);
+            setupForm();
+        })();
+
+        async function loadClient(id) {
+            try {
+                const response = await fetch(`../api/admin_client_get.php?id=${id}`, {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al cargar cliente');
+                }
+
+                const data = await response.json();
+                const cliente = data.cliente;
+
+                document.getElementById('clientId').value = cliente.id_cliente;
+                document.getElementById('nombre').value = cliente.nombre || '';
+                document.getElementById('apellido').value = cliente.apellido || '';
+                document.getElementById('email').value = cliente.email || '';
+                document.getElementById('telefono').value = cliente.telefono || '';
+                document.getElementById('direccion').value = cliente.direccion || '';
+
+                // Fecha de registro
+                if (cliente.fecha_registro) {
+                    const fecha = new Date(cliente.fecha_registro);
+                    document.getElementById('fechaRegistro').textContent = fecha.toLocaleString('es-MX');
+                }
+
+                // Estado
+                document.getElementById('estado').textContent = cliente.estado || 'activo';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar cliente: ' + error.message);
+                window.history.back();
+            }
+        }
+
+        function setupForm() {
+            const form = document.getElementById('clientForm');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+
+                const msg = document.getElementById('msg');
+                msg.textContent = '';
+
+                try {
+                    const formData = new FormData(form);
+
+                    msg.textContent = 'Actualizando cliente...';
+                    msg.style.color = '#2c5db5';
+
+                    const response = await fetch('../api/admin_client_update.php', {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: formData
+                    });
+
+                    const text = await response.text();
+
+                    if (response.ok && text === 'OK') {
+                        msg.textContent = '✓ Cliente actualizado correctamente';
+                        msg.style.color = '#2bb640';
+
+                        // Recargar datos
+                        await loadClient(clientId);
+
+                        // Redirigir después de 1.5 segundos
+                        setTimeout(() => {
+                            window.location.href = `admin-dashboard.html#${fromTab}`;
+                        }, 1500);
+                    } else {
+                        msg.textContent = 'Error: ' + text;
+                        msg.style.color = '#d00000';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    msg.textContent = 'Error de conexión';
+                    msg.style.color = '#d00000';
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>
