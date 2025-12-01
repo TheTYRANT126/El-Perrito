@@ -222,7 +222,7 @@ function renderImages() {
     });
 
     if (allImages.length === 0) {
-        mainImage.src = '../src/assets/icon/placeholder.png';
+        mainImage.src = '../src/assets/placeholder.png';
         return;
     }
 

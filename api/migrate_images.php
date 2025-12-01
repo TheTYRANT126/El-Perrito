@@ -14,7 +14,7 @@ header('Content-Type: text/html; charset=utf-8');
 echo "<h1>Migración de Imágenes de Productos</h1>";
 echo "<p>Renombrando imágenes a convención imagen1.jpg, imagen2.jpg...</p>";
 
-$images_dir = dirname(__DIR__) . '/src/assets/icon';
+$images_dir = dirname(__DIR__) . '/src/assets';
 $migrated = 0;
 $errors = [];
 

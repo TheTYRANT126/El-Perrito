@@ -91,12 +91,17 @@ class CrudProducto
             return $this->assetUrl('placeholder.png');
         }
 
-        if ($this->startsWith($limpia, 'images/')) {
-            $limpia = substr($limpia, strlen('images/'));
-        }
+        $prefijos = [
+            'images/',
+            'icon/',
+            'src/assets/',
+            'src/assets/icon/'
+        ];
 
-        if ($this->startsWith($limpia, 'src/assets/icon/')) {
-            $limpia = substr($limpia, strlen('src/assets/icon/'));
+        foreach ($prefijos as $prefijo) {
+            if ($this->startsWith($limpia, $prefijo)) {
+                $limpia = substr($limpia, strlen($prefijo));
+            }
         }
 
         return $this->assetUrl($limpia);
@@ -148,12 +153,12 @@ class CrudProducto
             $prefix = '';
         }
 
-        return $prefix . '/src/assets/icon';
+        return $prefix . '/src/assets';
     }
 
     private function resolveAssetDiskPath(): string
     {
-        return dirname(__DIR__) . '/assets/icon';
+        return dirname(__DIR__) . '/assets';
     }
 
     private function startsWith(string $haystack, string $needle): bool

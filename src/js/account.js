@@ -127,8 +127,8 @@ async function loadOrderDetail(orderId) {
         items.forEach(item => {
             itemsHtml += '<div class="order-item-row">';
             // La ruta de la imagen ya viene completa desde la API
-            const imgSrc = item.imagen || '../src/assets/icon/placeholder.png';
-            itemsHtml += `<img src="${imgSrc}" alt="${item.nombre}" onerror="this.src='../src/assets/icon/placeholder.png'">`;
+            const imgSrc = item.imagen || '../src/assets/placeholder.png';
+            itemsHtml += `<img src="${imgSrc}" alt="${item.nombre}" onerror="this.src='../src/assets/placeholder.png'">`;
             itemsHtml += '<div class="item-info">';
             itemsHtml += `<div class="item-name">${item.nombre}</div>`;
             itemsHtml += `<div class="item-quantity">Cantidad: ${item.cantidad}</div>`;

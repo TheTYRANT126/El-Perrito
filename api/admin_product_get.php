@@ -43,7 +43,7 @@ try {
     $producto['imagen'] = $productoCrud->normalizarRutaImagen($producto['imagen'] ?? null);
     
     // Obtener imágenes del producto
-    $img_dir = dirname(__DIR__) . '/src/assets/icon/' . $id . '_product';
+    $img_dir = dirname(__DIR__) . '/src/assets/' . $id . '_product';
     $imagenes = [];
     
     if (is_dir($img_dir)) {

@@ -13,7 +13,7 @@ const histList = document.getElementById('histList');
 
 const categoriesEndpoint = apiUrl('categories_list.php');
 const productsEndpoint = apiUrl('products_list.php');
-const placeholderImage = assetUrl('icon/placeholder.png');
+const placeholderImage = assetUrl('placeholder.png');
 document.addEventListener('DOMContentLoaded', function () {
     const grid = document.getElementById('grid');
 

@@ -63,7 +63,7 @@ async function loadClientOrders(clientId) {
                     <tr>
                         <td>
                             <div class="product-cell">
-                                <img src="${item.imagen_producto || '../src/assets/icon/placeholder.png'}" alt="${item.nombre_producto}" onerror="this.src='../src/assets/icon/placeholder.png'">
+                                <img src="${item.imagen_producto || '../src/assets/placeholder.png'}" alt="${item.nombre_producto}" onerror="this.src='../src/assets/placeholder.png'">
                                 <span>${item.nombre_producto}</span>
                             </div>
                         </td>

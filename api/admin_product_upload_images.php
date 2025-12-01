@@ -30,7 +30,7 @@ if (!$producto) {
 }
 
 // Crear directorio si no existe
-$upload_dir = dirname(__DIR__) . '/src/assets/icon/' . $id_producto . '_product';
+$upload_dir = dirname(__DIR__) . '/src/assets/' . $id_producto . '_product';
 if (!is_dir($upload_dir)) {
     mkdir($upload_dir, 0755, true);
 }

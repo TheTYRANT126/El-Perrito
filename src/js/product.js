@@ -1,5 +1,5 @@
 const wrap = document.getElementById('prodWrap');
-const placeholder = '../src/assets/icon/placeholder.png';
+const placeholder = '../src/assets/placeholder.png';
 
 const showMessage = (title, description = '') => {
     wrap.innerHTML = `

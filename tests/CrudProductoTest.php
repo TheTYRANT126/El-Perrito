@@ -13,7 +13,7 @@ final class CrudProductoTest extends TestCase
         $crud = new CrudProducto(new PDO('sqlite::memory:'));
         $ruta = $crud->normalizarRutaImagen(null);
 
-        $this->assertStringEndsWith('/src/assets/icon/placeholder.png', $ruta);
+        $this->assertStringEndsWith('/src/assets/placeholder.png', $ruta);
     }
 
     public function testNormalizarRutaImagenEliminaPrefijosAntiguos(): void
@@ -21,6 +21,6 @@ final class CrudProductoTest extends TestCase
         $crud = new CrudProducto(new PDO('sqlite::memory:'));
         $ruta = $crud->normalizarRutaImagen('images/25_product/imagen1.png');
 
-        $this->assertStringEndsWith('/src/assets/icon/25_product/imagen1.png', $ruta);
+        $this->assertStringEndsWith('/src/assets/25_product/imagen1.png', $ruta);
     }
 }

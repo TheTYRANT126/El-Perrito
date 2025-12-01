@@ -242,7 +242,7 @@ async function loadProductos() {
             
             tr.innerHTML = `
                 <td>${producto.id_producto}</td>
-                <td><img src="${producto.imagen || '../src/assets/icon/placeholder.png'}" alt="${producto.nombre}" onerror="this.src='../src/assets/icon/placeholder.png'"></td>
+                <td><img src="${producto.imagen || '../src/assets/placeholder.png'}" alt="${producto.nombre}" onerror="this.src='../src/assets/placeholder.png'"></td>
                 <td>${producto.nombre}</td>
                 <td>$${Number(producto.precio_venta).toFixed(2)}</td>
                 <td>${producto.existencia} unidades</td>
