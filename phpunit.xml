@@ -7,7 +7,7 @@
     <!-- Definir dónde están las pruebas -->
     <testsuites>
         <testsuite name="Unit Tests">
-            <directory>src/test/php</directory>
+            <directory>test/php</directory>
         </testsuite>
     </testsuites>
 

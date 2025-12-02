@@ -5,7 +5,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 use Spide\PUelperrito\Database\Connection;
 
-final class ConexionTest extends TestCase
+final class conectionTest extends TestCase
 {
     public function testGetInstanceReturnsSameInstanceWhenCalledMultipleTimes(): void
     {
@@ -14,7 +14,7 @@ final class ConexionTest extends TestCase
         $reflection = new \ReflectionClass(Connection::class);
         $property = $reflection->getProperty('instance');
         $property->setAccessible(true);
-        $property->setValue($mockPDO);
+        $property->setValue(null,$mockPDO);
 
         $instance1 = Connection::getInstance();
         $instance2 = Connection::getInstance();
@@ -27,7 +27,7 @@ final class ConexionTest extends TestCase
         $config = [
             'host' => 'invalid_host',
             'dbname' => 'invalid_db',
-            'user' => 'invalid_user',Z
+            'user' => 'invalid_user',
             'pass' => 'invalid_pass'
         ];
 
