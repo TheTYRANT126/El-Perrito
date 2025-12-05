@@ -37,7 +37,7 @@ async function checkAdminAccess() {
 
         if (data.status !== 'admin') {
             alert('Acceso denegado. Solo personal autorizado puede acceder.');
-            window.location.href = '../index.html';
+            window.location.href = 'index.html';
             return;
         }
 
@@ -49,7 +49,7 @@ async function checkAdminAccess() {
 
     } catch (error) {
         console.error('Error verificando acceso:', error);
-        window.location.href = '../login.html';
+        window.location.href = 'login.html';
     }
 }
 

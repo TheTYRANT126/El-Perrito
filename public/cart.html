@@ -10,12 +10,12 @@
 
 <body class="bg">
   <header class="header">
-    <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+    <a href="index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
     <nav class="nav">
-      <a href="../index.html">Inicio</a>
+      <a href="index.html">Inicio</a>
       <a class="disabled" href="#">Promociones</a>
       <a href="cart.html">Carrito</a>
-      <a id="accountLink" href="../login.html">Cuenta</a>
+      <a id="accountLink" href="login.html">Cuenta</a>
     </nav>
   </header>
 
@@ -30,28 +30,31 @@
         </div>
         <div id="rows"></div>
       </div>
-      <div class="summary">
-        <h3>Subtotal</h3>
-        <div id="subinfo"><small class="muted">(0 productos): $0.00</small></div>
-        <button id="pay" class="btn success" style="margin-top:12px">Proceder al pago</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de Selección de Dirección -->
-  <div id="modal-select-address" class="modal" style="display:none">
-    <div class="modal-content" style="max-width:700px">
-      <div class="modal-header">
-        <h2>Selecciona Dirección de Envío</h2>
-        <span class="modal-close" data-modal="modal-select-address">&times;</span>
-      </div>
-      <div class="modal-body">
-        <div id="address-selector" class="address-selector">
-          <p style="text-align:center; color:#999">Cargando direcciones...</p>
+      <div class="cart-sidebar">
+        <div class="summary">
+          <h3>Subtotal</h3>
+          <div id="subinfo"><small class="muted">(0 productos): $0.00</small></div>
+          <button id="pay" class="btn success" style="margin-top:12px">Proceder al pago</button>
         </div>
-        <div style="margin-top:20px; display:flex; gap:12px; justify-content:flex-end">
-          <a href="account.html" class="btn outline">Gestionar Direcciones</a>
-          <button id="btn-confirm-checkout" class="btn success">Confirmar Compra</button>
+
+        <div class="shipping-selector">
+          <h3 style="margin-top:0; margin-bottom:16px">Dirección de Envío</h3>
+          <div id="address-selector" class="address-selector">
+            <p style="text-align:center; color:#999">Cargando direcciones...</p>
+          </div>
+          <div style="margin-top:16px; text-align:center">
+            <a href="account.html" class="btn outline" style="width:100%; text-align:center">Gestionar Direcciones</a>
+          </div>
+        </div>
+
+        <div class="payment-selector">
+          <h3 style="margin-top:0; margin-bottom:16px">Método de Pago</h3>
+          <div id="card-selector" class="card-selector">
+            <p style="text-align:center; color:#999">Cargando tarjetas...</p>
+          </div>
+          <div style="margin-top:16px; text-align:center">
+            <a href="account.html" class="btn outline" style="width:100%; text-align:center">Gestionar Tarjetas</a>
+          </div>
         </div>
       </div>
     </div>

@@ -89,12 +89,12 @@ async function checkAdminSession() {
 
         if (session.status !== 'admin') {
             alert('No tienes permisos para acceder a esta página');
-            window.location.href = '../login.html';
+            window.location.href = 'login.html';
         }
     } catch (error) {
         console.error('Error verificando sesión:', error);
         alert('Debes iniciar sesión como administrador');
-        window.location.href = '../login.html';
+        window.location.href = 'login.html';
     }
 }
 

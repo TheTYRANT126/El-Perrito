@@ -26,7 +26,15 @@ async function load() {
       if (text.includes('NO_LOGIN') || response.status === 401) {
         rows.innerHTML = '<div class="card">Inicia sesión para ver tu carrito.</div>';
         subinfo.innerHTML = '<small class="muted">—</small>';
-        pay.disabled = true;
+
+        const payButton = document.getElementById('pay');
+        if (payButton) payButton.disabled = true;
+
+        // Ocultar selectores cuando no hay sesión
+        const shippingSelector = document.querySelector('.shipping-selector');
+        const paymentSelector = document.querySelector('.payment-selector');
+        if (shippingSelector) shippingSelector.style.display = 'none';
+        if (paymentSelector) paymentSelector.style.display = 'none';
         return;
       }
 
@@ -43,9 +51,23 @@ async function load() {
     if (!c.items || c.items.length === 0) {
       rows.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Tu carrito está vacío</div>';
       subinfo.innerHTML = '<small class="muted">(0 productos): $0.00</small>';
-      pay.disabled = true;
+
+      const payButton = document.getElementById('pay');
+      if (payButton) payButton.disabled = true;
+
+      // Ocultar selectores cuando el carrito está vacío
+      const shippingSelector = document.querySelector('.shipping-selector');
+      const paymentSelector = document.querySelector('.payment-selector');
+      if (shippingSelector) shippingSelector.style.display = 'none';
+      if (paymentSelector) paymentSelector.style.display = 'none';
       return;
     }
+
+    // Mostrar selectores si hay items
+    const shippingSelector = document.querySelector('.shipping-selector');
+    const paymentSelector = document.querySelector('.payment-selector');
+    if (shippingSelector) shippingSelector.style.display = 'block';
+    if (paymentSelector) paymentSelector.style.display = 'block';
 
     // Renderizar items del carrito
     c.items.forEach(it => {
@@ -132,18 +154,25 @@ async function load() {
 
     // Actualizar resumen
     subinfo.innerHTML = `<strong>(${count} producto${count !== 1 ? 's' : ''}): $${subtotal.toFixed(2)}</strong>`;
-    pay.disabled = false;
 
-    // Configurar botón de pago - abrir modal de selección de dirección
-    pay.onclick = async () => {
-      openAddressModal();
-    };
+    // Configurar botón de proceder al pago
+    const payButton = document.getElementById('pay');
+    if (payButton) {
+      payButton.disabled = false;
+      payButton.onclick = confirmCheckout;
+    }
+
+    // Cargar direcciones y tarjetas para el checkout
+    loadAddressesForCheckout();
+    loadCardsForCheckout();
 
   } catch (error) {
     console.error('Error cargando carrito:', error);
     rows.innerHTML = `<div class="card">Error al cargar el carrito. Por favor, recarga la página.</div>`;
     subinfo.innerHTML = '<small class="muted">Error</small>';
-    pay.disabled = true;
+
+    const payButton = document.getElementById('pay');
+    if (payButton) payButton.disabled = true;
   }
 }
 
@@ -187,7 +216,15 @@ async function checkSessionAndLoad() {
     } else {
       rows.innerHTML = '<div class="card">Inicia sesión para ver tu carrito.</div>';
       subinfo.innerHTML = '<small class="muted">—</small>';
-      pay.disabled = true;
+
+      const payButton = document.getElementById('pay');
+      if (payButton) payButton.disabled = true;
+
+      // Ocultar selectores cuando no hay sesión
+      const shippingSelector = document.querySelector('.shipping-selector');
+      const paymentSelector = document.querySelector('.payment-selector');
+      if (shippingSelector) shippingSelector.style.display = 'none';
+      if (paymentSelector) paymentSelector.style.display = 'none';
     }
   } catch (error) {
     console.error('Error verificando sesión:', error);
@@ -199,19 +236,6 @@ async function checkSessionAndLoad() {
 // Selección de Dirección de Envío
 // =========================
 let selectedAddressId = null;
-
-function openAddressModal() {
-  const modal = document.getElementById('modal-select-address');
-  modal.style.display = 'flex';
-  loadAddressesForCheckout();
-}
-
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'none';
-  }
-}
 
 async function loadAddressesForCheckout() {
   const addressSelector = document.getElementById('address-selector');
@@ -232,7 +256,6 @@ async function loadAddressesForCheckout() {
           <a href="account.html" class="btn primary">Agrega una dirección primero</a>
         </p>
       `;
-      document.getElementById('btn-confirm-checkout').disabled = true;
       return;
     }
 
@@ -304,13 +327,127 @@ async function loadAddressesForCheckout() {
       });
     });
 
-    document.getElementById('btn-confirm-checkout').disabled = false;
-
   } catch (error) {
     addressSelector.innerHTML = '<p style="text-align:center; color:#dc2626">Error al cargar las direcciones</p>';
-    document.getElementById('btn-confirm-checkout').disabled = true;
     console.error(error);
   }
+}
+
+// =========================
+// Selección de Tarjeta de Pago
+// =========================
+let selectedCardId = null;
+
+async function loadCardsForCheckout() {
+  const cardSelector = document.getElementById('card-selector');
+  cardSelector.innerHTML = '<p style="text-align:center; color:#999">Cargando tarjetas...</p>';
+
+  try {
+    const response = await fetch('../api/card_list.php', { credentials: 'include' });
+    if (!response.ok) {
+      throw new Error('Error al cargar tarjetas');
+    }
+
+    const cards = await response.json();
+
+    if (!Array.isArray(cards) || cards.length === 0) {
+      cardSelector.innerHTML = `
+        <p style="text-align:center; color:#999">No tienes tarjetas guardadas.</p>
+        <p style="text-align:center; margin-top:12px">
+          <a href="account.html" class="btn primary">Agrega una tarjeta primero</a>
+        </p>
+      `;
+      return;
+    }
+
+    let html = '';
+    // Seleccionar automáticamente la tarjeta predeterminada
+    let defaultFound = false;
+
+    cards.forEach((card, index) => {
+      const isPredeterminada = card.es_predeterminada == 1;
+      const cardIcon = getCardIcon(card.tipo_tarjeta);
+      const cardName = getCardName(card.tipo_tarjeta);
+      const maskedNumber = maskCardNumber(card.numero_tarjeta);
+
+      if (isPredeterminada && !defaultFound) {
+        selectedCardId = card.id_tarjeta;
+        defaultFound = true;
+      }
+
+      const isSelected = (isPredeterminada && index === 0) || (!defaultFound && index === 0);
+
+      html += `<div class="card-option ${isSelected ? 'selected' : ''}" data-id="${card.id_tarjeta}">`;
+      html += `<label style="display:flex; cursor:pointer; width:100%">`;
+      html += `<input type="radio" name="card" value="${card.id_tarjeta}" ${isSelected ? 'checked' : ''}>`;
+      html += '<div style="flex:1">';
+
+      if (isPredeterminada) {
+        html += '<span class="badge badge-primary" style="margin-bottom:8px">Predeterminada</span><br>';
+      }
+
+      html += `<strong>${cardIcon} ${cardName} ${maskedNumber}</strong><br>`;
+      html += `<span style="color:var(--muted)">${card.nombre_titular}</span><br>`;
+      html += `<span style="color:var(--muted); font-size:14px">Expira: ${card.mes_expiracion}/${card.anio_expiracion}</span>`;
+
+      html += '</div>';
+      html += '</label>';
+      html += '</div>';
+    });
+
+    cardSelector.innerHTML = html;
+
+    // Si no hay predeterminada, seleccionar la primera
+    if (!defaultFound && cards.length > 0) {
+      selectedCardId = cards[0].id_tarjeta;
+    }
+
+    // Agregar event listeners
+    document.querySelectorAll('.card-option').forEach(option => {
+      option.addEventListener('click', function() {
+        // Quitar selección de todos
+        document.querySelectorAll('.card-option').forEach(opt => {
+          opt.classList.remove('selected');
+          opt.querySelector('input[type="radio"]').checked = false;
+        });
+        // Seleccionar este
+        this.classList.add('selected');
+        this.querySelector('input[type="radio"]').checked = true;
+        selectedCardId = this.getAttribute('data-id');
+      });
+    });
+
+  } catch (error) {
+    cardSelector.innerHTML = '<p style="text-align:center; color:#dc2626">Error al cargar las tarjetas</p>';
+    console.error(error);
+  }
+}
+
+// Funciones auxiliares para tarjetas
+function maskCardNumber(numero) {
+  if (!numero) return '****';
+  const last4 = numero.slice(-4);
+  return '**** **** **** ' + last4;
+}
+
+function getCardIcon(tipo) {
+  const icons = {
+    'visa': '💳',
+    'mastercard': '💳',
+    'amex': '💳',
+    'discover': '💳'
+  };
+  return icons[tipo] || '💳';
+}
+
+function getCardName(tipo) {
+  const names = {
+    'visa': 'Visa',
+    'mastercard': 'Mastercard',
+    'amex': 'American Express',
+    'discover': 'Discover'
+  };
+  return names[tipo] || tipo;
 }
 
 async function confirmCheckout() {
@@ -319,13 +456,19 @@ async function confirmCheckout() {
     return;
   }
 
-  if (!confirm('¿Confirmar compra con la dirección seleccionada?')) {
+  if (!selectedCardId) {
+    alert('Por favor selecciona un método de pago');
+    return;
+  }
+
+  if (!confirm('¿Confirmar compra con la dirección y método de pago seleccionados?')) {
     return;
   }
 
   try {
     const formData = new FormData();
     formData.append('id_direccion_envio', selectedAddressId);
+    formData.append('id_tarjeta', selectedCardId);
 
     const r = await fetch('../api/cart_checkout.php', {
       method: 'POST',
@@ -337,7 +480,6 @@ async function confirmCheckout() {
 
     if (r.ok && t === 'OK') {
       alert('¡Compra realizada con éxito!');
-      closeModal('modal-select-address');
       load();
     } else {
       alert('Error al procesar la compra: ' + (t || 'Error desconocido'));
@@ -349,31 +491,6 @@ async function confirmCheckout() {
   }
 }
 
-// Event listeners para modales
-document.addEventListener('DOMContentLoaded', () => {
-  // Cerrar modales
-  document.querySelectorAll('.modal-close').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const modalId = e.target.getAttribute('data-modal');
-      closeModal(modalId);
-    });
-  });
-
-  // Cerrar modal al hacer click fuera
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
-  });
-
-  // Botón de confirmar checkout
-  const btnConfirmCheckout = document.getElementById('btn-confirm-checkout');
-  if (btnConfirmCheckout) {
-    btnConfirmCheckout.addEventListener('click', confirmCheckout);
-  }
-});
 
 // Inicializar carrito
 if (document.readyState === 'loading') {

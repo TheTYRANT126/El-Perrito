@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-10-2025 a las 17:05:16
+-- Tiempo de generación: 04-12-2025 a las 16:16:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,11 @@ CREATE TABLE `carrito` (
 
 INSERT INTO `carrito` (`id_carrito`, `id_cliente`, `estado`, `fecha_creacion`) VALUES
 (6, 4, 'activo', '2025-10-08 12:23:57'),
-(10, 5, 'activo', '2025-10-09 17:21:37');
+(10, 5, 'cerrado', '2025-10-09 17:21:37'),
+(11, 5, 'cerrado', '2025-11-12 14:31:34'),
+(12, 5, 'cerrado', '2025-11-30 19:32:38'),
+(13, 5, 'cerrado', '2025-11-30 20:32:58'),
+(14, 5, 'activo', '2025-12-04 08:28:32');
 
 -- --------------------------------------------------------
 
@@ -115,7 +119,14 @@ CREATE TABLE `detalle_carrito` (
 
 INSERT INTO `detalle_carrito` (`id_item`, `id_carrito`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
 (12, 10, 5, 5, 45.00),
-(13, 10, 8, 5, 189.00);
+(13, 10, 8, 5, 189.00),
+(14, 11, 4, 1, 45.00),
+(15, 11, 5, 3, 45.00),
+(16, 11, 20, 1, 139.00),
+(17, 12, 20, 1, 139.00),
+(18, 12, 4, 1, 45.00),
+(19, 13, 20, 1, 139.00),
+(20, 14, 4, 9, 45.00);
 
 -- --------------------------------------------------------
 
@@ -129,6 +140,100 @@ CREATE TABLE `detalle_venta` (
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
   `precio_unitario` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_venta`
+--
+
+INSERT INTO `detalle_venta` (`id_detalle`, `id_venta`, `id_producto`, `cantidad`, `precio_unitario`) VALUES
+(5, 3, 5, 5, 45.00),
+(6, 3, 8, 5, 189.00),
+(7, 4, 4, 1, 45.00),
+(8, 4, 5, 3, 45.00),
+(9, 4, 20, 1, 139.00),
+(10, 5, 20, 1, 139.00),
+(11, 5, 4, 1, 45.00),
+(12, 6, 20, 1, 139.00);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `direccion`
+--
+
+CREATE TABLE `direccion` (
+  `id_direccion` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `alias` varchar(50) DEFAULT NULL COMMENT 'Ej: Casa, Trabajo, Oficina',
+  `calle` varchar(255) NOT NULL,
+  `numero_exterior` varchar(20) NOT NULL,
+  `numero_interior` varchar(20) DEFAULT NULL,
+  `colonia` varchar(100) NOT NULL,
+  `ciudad` varchar(100) NOT NULL,
+  `estado` varchar(100) NOT NULL,
+  `codigo_postal` varchar(10) NOT NULL,
+  `referencias` text DEFAULT NULL,
+  `es_predeterminada` tinyint(1) NOT NULL DEFAULT 0,
+  `es_facturacion` tinyint(1) NOT NULL DEFAULT 0,
+  `activa` tinyint(1) NOT NULL DEFAULT 1,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `direccion_envio`
+--
+
+CREATE TABLE `direccion_envio` (
+  `id_direccion` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `nombre_completo` varchar(160) NOT NULL,
+  `telefono` varchar(40) NOT NULL,
+  `calle` varchar(255) NOT NULL,
+  `numero_exterior` varchar(20) DEFAULT NULL,
+  `numero_interior` varchar(20) DEFAULT NULL,
+  `colonia` varchar(100) NOT NULL,
+  `ciudad` varchar(100) NOT NULL,
+  `estado` varchar(100) NOT NULL,
+  `codigo_postal` varchar(10) NOT NULL,
+  `referencias` text DEFAULT NULL,
+  `es_predeterminada` tinyint(1) NOT NULL DEFAULT 0,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_modificacion` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `direccion_envio`
+--
+
+INSERT INTO `direccion_envio` (`id_direccion`, `id_cliente`, `nombre_completo`, `telefono`, `calle`, `numero_exterior`, `numero_interior`, `colonia`, `ciudad`, `estado`, `codigo_postal`, `referencias`, `es_predeterminada`, `fecha_creacion`, `fecha_modificacion`) VALUES
+(1, 5, 'Emmanuel', '9511782091', 'PROL. VICENTE GUERRERO', '100', '', 'Reforma Agraria', 'Oaxaca de Juárez', 'Oaxaca', '71233', 'al lado de una casa', 0, '2025-11-30 21:30:41', '2025-12-04 08:35:22'),
+(2, 5, 'Diana', '9511782091', 'PROL. VICENTE GUERRERO', '100', '', 'Reforma Agraria', 'Oaxaca de Juárez', 'Oaxaca', '71233', 'al lado de una casa', 1, '2025-11-30 21:31:00', '2025-12-04 08:35:22');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `envio`
+--
+
+CREATE TABLE `envio` (
+  `id_envio` int(11) NOT NULL,
+  `id_venta` int(11) NOT NULL,
+  `id_direccion` int(11) NOT NULL,
+  `paqueteria` varchar(50) DEFAULT NULL COMMENT 'DHL, FedEx, Estafeta, etc.',
+  `numero_guia` varchar(100) DEFAULT NULL,
+  `costo_envio` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `peso_kg` decimal(8,2) DEFAULT NULL,
+  `estado_envio` enum('pendiente','preparando','en_transito','en_reparto','entregado','devuelto','cancelado') NOT NULL DEFAULT 'pendiente',
+  `fecha_envio` datetime DEFAULT NULL,
+  `fecha_entrega_estimada` date DEFAULT NULL,
+  `fecha_entrega_real` datetime DEFAULT NULL,
+  `notas` text DEFAULT NULL,
+  `receptor_nombre` varchar(160) DEFAULT NULL,
+  `receptor_firma` varchar(255) DEFAULT NULL COMMENT 'URL de imagen de firma',
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -146,6 +251,14 @@ CREATE TABLE `historial_usuario` (
   `fecha_cambio` datetime NOT NULL DEFAULT current_timestamp(),
   `id_usuario_modificador` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `historial_usuario`
+--
+
+INSERT INTO `historial_usuario` (`id_historial`, `id_usuario`, `campo_modificado`, `valor_anterior`, `valor_nuevo`, `fecha_cambio`, `id_usuario_modificador`) VALUES
+(1, 10, 'fecha_nacimiento', NULL, '1999-03-26', '2025-11-12 13:44:19', 9),
+(2, 10, 'apellido', 'Velasquez', 'Velasquez Ortiz', '2025-11-12 17:34:50', 9);
 
 -- --------------------------------------------------------
 
@@ -194,7 +307,27 @@ INSERT INTO `inventario` (`id_producto`, `stock`, `stock_minimo`) VALUES
 (28, 35, 5),
 (29, 34, 5),
 (30, 54, 5),
-(31, 57, 5);
+(31, 57, 5),
+(32, 100, 30);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pago`
+--
+
+CREATE TABLE `pago` (
+  `id_pago` int(11) NOT NULL,
+  `id_venta` int(11) NOT NULL,
+  `metodo_pago` enum('tarjeta_credito','tarjeta_debito','transferencia','paypal','mercado_pago','oxxo','efectivo') NOT NULL,
+  `monto` decimal(10,2) NOT NULL,
+  `referencia` varchar(100) DEFAULT NULL COMMENT 'ID de transacción o referencia bancaria',
+  `ultimos_digitos` varchar(4) DEFAULT NULL COMMENT 'Últimos 4 dígitos de tarjeta',
+  `estado` enum('pendiente','completado','rechazado','reembolsado','cancelado') NOT NULL DEFAULT 'pendiente',
+  `fecha_pago` datetime DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `notas` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -241,18 +374,19 @@ INSERT INTO `producto` (`id_producto`, `id_categoria`, `nombre`, `descripcion`, 
 (17, 3, 'Transportadora Mediana', 'Transportadora plástica con ventilación. Aprobada para viajes aéreos.', 899.00, 'images/transportadora.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (18, 3, 'Arnés Ajustable Talla M', 'Arnés ergonómico que distribuye mejor la presión. Talla mediana.', 249.00, 'images/arnes.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (19, 4, 'Shampoo Neutro 500ml', 'Shampoo pH neutro para uso frecuente. No irrita la piel sensible.', 119.00, 'images/shampoo_neutro.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
-(20, 4, 'Acondicionador 500ml', 'Acondicionador que desenreda y da brillo al pelaje. Aroma duradero.', 139.00, 'images/acondicionador.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(20, 4, 'Acondicionador 500ml', 'Acondicionador que desenreda y da brillo al pelaje. Aroma duradero.', 139.00, '20_product/imagen1.png', NULL, NULL, '2025-10-29 09:25:01', '2025-11-30 19:26:53', 0, 1),
 (21, 4, 'Cepillo Doble Cara', 'Cepillo con cerdas suaves de un lado y peine metálico del otro.', 89.00, 'images/cepillo.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (22, 4, 'Cortauñas Profesional', 'Cortauñas de acero inoxidable con seguro. Para perros medianos y grandes.', 149.00, 'images/cortaunas.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (23, 4, 'Toallitas Húmedas 80pz', 'Toallitas húmedas hipoalalergénicas para limpieza rápida. Aroma lavanda.', 79.00, 'images/toallitas.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (24, 4, 'Perfume Perros 120ml', 'Colonia suave de larga duración. No irrita el olfato del perro.', 99.00, 'images/perfume.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
-(25, 5, 'Pelota Tenis Pack 3', 'Pack de 3 pelotas de tenis especiales para perros. Material resistente.', 79.00, 'images/pelotas_tenis.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
+(25, 5, 'Pelota Tenis Pack 3', 'Pack de 3 pelotas de tenis especiales para perros. Material resistente.', 79.00, '25_product/imagen1.png', NULL, NULL, '2025-10-29 09:25:01', '2025-11-13 11:22:08', 0, 1),
 (26, 5, 'Hueso Goma Grande', 'Hueso de goma termoplástica resistente. Ideal para mordedores fuertes.', 129.00, 'images/hueso_goma.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (27, 5, 'Cuerda Nudo 30cm', 'Cuerda de algodón con nudos para juego de tira y afloja.', 69.00, 'images/cuerda_nudo.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (28, 5, 'Frisbee Flotante', 'Frisbee de material suave que flota en el agua. Colores surtidos.', 89.00, 'images/frisbee.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (29, 5, 'Peluche Pato con Sonido', 'Peluche de pato que emite sonido al presionar. Material lavable.', 99.00, 'images/peluche_pato.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
 (30, 5, 'Kong Classic Mediano', 'Juguete Kong original rellenable. Ayuda a reducir la ansiedad.', 199.00, 'images/kong.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1),
-(31, 5, 'Pelota con Luz LED', 'Pelota que se ilumina al rebotar. Ideal para jugar en la oscuridad.', 119.00, 'images/pelota_led.jpg', NULL, NULL, '2025-10-29 09:25:01', NULL, 0, 1);
+(31, 5, 'Pelota con Luz LED xdddd', 'Pelota que se ilumina al rebotar. Ideal para jugar en la oscuridad.', 119.00, '31_product/imagen1.png', NULL, NULL, '2025-10-29 09:25:01', '2025-10-30 11:10:40', 0, 1),
+(32, 3, 'Memoria usb', 'una memoria de 200gb', 100.00, '32_product/imagen1.jpg', NULL, 9, '2025-11-13 11:23:34', '2025-11-13 11:24:16', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -283,6 +417,59 @@ CREATE TABLE `registro_actividad` (
   `fecha_accion` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `registro_actividad`
+--
+
+INSERT INTO `registro_actividad` (`id_registro`, `id_usuario`, `tipo_accion`, `tabla_afectada`, `id_registro_afectado`, `descripcion`, `fecha_accion`) VALUES
+(1, 9, 'editar', 'PRODUCTO', 31, 'Subió 1 imagen(es) al producto \'Pelota con Luz LED\'', '2025-10-30 10:12:56'),
+(2, 9, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED\' (ID: 31)', '2025-10-30 10:29:33'),
+(3, 9, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED\' (ID: 31)', '2025-10-30 10:29:34'),
+(4, 9, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED\' (ID: 31)', '2025-10-30 10:29:35'),
+(5, 9, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED\' (ID: 31)', '2025-10-30 10:32:37'),
+(6, 9, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED xd\' (ID: 31)', '2025-10-30 10:34:35'),
+(7, 9, 'crear', 'USUARIO', 10, 'Creó usuario: Miguel Angel Velasquez (operador@elperrito.com) con rol: operador', '2025-10-30 11:10:04'),
+(8, 10, 'editar', 'PRODUCTO', 31, 'Modificó el producto \'Pelota con Luz LED xdddd\' (ID: 31)', '2025-10-30 11:10:40'),
+(9, 9, 'editar', 'USUARIO', 10, 'Modificó el usuario Miguel Angel Velasquez (ID: 10)', '2025-11-12 13:44:19'),
+(10, 9, 'editar', 'USUARIO', 10, 'Modificó el usuario Miguel Angel Velasquez Ortiz (ID: 10)', '2025-11-12 17:34:50'),
+(11, 9, 'editar', 'PRODUCTO', 25, 'Modificó el producto \'Pelota Tenis Pack 3\' (ID: 25)', '2025-11-13 11:22:08'),
+(12, 9, 'editar', 'PRODUCTO', 25, 'Subió 1 imagen(es) al producto \'Pelota Tenis Pack 3\'', '2025-11-13 11:22:08'),
+(13, 9, 'crear', 'PRODUCTO', 32, 'Creó el producto \'Memoria usb\' (ID: 32)', '2025-11-13 11:23:34'),
+(14, 9, 'editar', 'PRODUCTO', 32, 'Modificó el producto \'Memoria usb\' (ID: 32)', '2025-11-13 11:24:10'),
+(15, 9, 'editar', 'PRODUCTO', 32, 'Subió 1 imagen(es) al producto \'Memoria usb\'', '2025-11-13 11:24:10'),
+(16, 9, 'editar', 'PRODUCTO', 32, 'Modificó el producto \'Memoria usb\' (ID: 32)', '2025-11-13 11:24:16'),
+(17, 9, 'eliminar', 'PRODUCTO', 32, 'Marcó como inactivo el producto \'Memoria usb\' (ID: 32)', '2025-11-13 11:24:27'),
+(18, 2, 'editar', 'PRODUCTO', 20, 'Modificó el producto \'Acondicionador 500ml\' (ID: 20)', '2025-11-30 19:26:53'),
+(19, 2, 'editar', 'PRODUCTO', 20, 'Subió 1 imagen(es) al producto \'Acondicionador 500ml\'', '2025-11-30 19:26:53');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tarjeta`
+--
+
+CREATE TABLE `tarjeta` (
+  `id_tarjeta` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `tipo_tarjeta` enum('visa','mastercard','amex','discover') NOT NULL,
+  `numero_tarjeta` varchar(20) NOT NULL COMMENT 'N├║mero completo de la tarjeta',
+  `cvv` varchar(4) NOT NULL,
+  `nombre_titular` varchar(160) NOT NULL,
+  `mes_expiracion` varchar(2) NOT NULL,
+  `anio_expiracion` varchar(4) NOT NULL,
+  `es_predeterminada` tinyint(1) NOT NULL DEFAULT 0,
+  `activa` tinyint(1) NOT NULL DEFAULT 1,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_modificacion` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tarjeta`
+--
+
+INSERT INTO `tarjeta` (`id_tarjeta`, `id_cliente`, `tipo_tarjeta`, `numero_tarjeta`, `cvv`, `nombre_titular`, `mes_expiracion`, `anio_expiracion`, `es_predeterminada`, `activa`, `fecha_creacion`, `fecha_modificacion`) VALUES
+(1, 5, 'visa', '1234567891234', '123', 'Emmanuel Velasquez Ortiz', '06', '2033', 1, 1, '2025-12-04 08:59:42', '2025-12-04 09:07:19');
+
 -- --------------------------------------------------------
 
 --
@@ -312,7 +499,8 @@ CREATE TABLE `usuario` (
 INSERT INTO `usuario` (`id_usuario`, `nombre`, `apellido`, `email`, `password_hash`, `curp`, `fecha_nacimiento`, `direccion`, `telefono`, `fecha_registro`, `fecha_ultima_modificacion`, `rol`, `activo`) VALUES
 (1, 'Administrador', NULL, 'admin@elperrito.local', '$2y$10$knT6D6Wzv4TQq2r3Q5QnNub0iWj7gI.7y0gq0l8L8mQZp5s6b8pO2', NULL, NULL, NULL, NULL, '2025-10-29 09:25:01', NULL, 'admin', 1),
 (2, 'Administrador', NULL, 'administrador@elperrito.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NULL, NULL, NULL, NULL, '2025-10-29 09:25:01', NULL, 'admin', 1),
-(9, 'Emmanuel', 'Velasquez Ortiz', 'admin123@elperrito.com', '$2y$10$8ut1OrwNzSSZXiFfUSGBTe3WowzWz2cM9c17XThRmLSeP5.cE/Mva', NULL, NULL, 'Oaxaca', '9511160653', '2025-10-30 09:56:52', NULL, 'admin', 1);
+(9, 'Emmanuel', 'Velasquez Ortiz', 'admin123@elperrito.com', '$2y$10$8ut1OrwNzSSZXiFfUSGBTe3WowzWz2cM9c17XThRmLSeP5.cE/Mva', NULL, NULL, 'Oaxaca', '9511160653', '2025-10-30 09:56:52', NULL, 'admin', 1),
+(10, 'Miguel Angel', 'Velasquez Ortiz', 'operador@elperrito.com', '$2y$10$32FcX56u8JBtZQ7sQB1lmuYeD9dfc2biG3pXK93urIaLxc3neUfM2', '', '1999-03-26', 'XOXO AV. INDEPENDENCIA', '9511782091', '2025-10-30 11:10:04', '2025-11-12 17:34:50', 'operador', 1);
 
 -- --------------------------------------------------------
 
@@ -326,8 +514,21 @@ CREATE TABLE `venta` (
   `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   `total` decimal(12,2) NOT NULL,
   `estado_pago` enum('pendiente','pagado','rechazado') NOT NULL DEFAULT 'pendiente',
-  `direccion_envio` varchar(255) DEFAULT NULL
+  `estado_envio` enum('pendiente','preparacion','enviado','entregado','cancelado') NOT NULL DEFAULT 'pendiente',
+  `direccion_envio` varchar(255) DEFAULT NULL,
+  `id_direccion_envio` int(11) DEFAULT NULL,
+  `id_tarjeta` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `venta`
+--
+
+INSERT INTO `venta` (`id_venta`, `id_cliente`, `fecha`, `total`, `estado_pago`, `estado_envio`, `direccion_envio`, `id_direccion_envio`, `id_tarjeta`) VALUES
+(3, 5, '2025-11-12 14:31:33', 1170.00, 'pagado', 'pendiente', NULL, NULL, NULL),
+(4, 5, '2025-11-30 19:32:37', 319.00, 'pagado', 'pendiente', NULL, NULL, NULL),
+(5, 5, '2025-11-30 20:32:57', 184.00, 'pagado', 'pendiente', 'ghfghdfghrth', NULL, NULL),
+(6, 5, '2025-12-04 08:28:30', 139.00, 'pagado', 'pendiente', 'PROL. VICENTE GUERRERO 100 , Reforma Agraria, Oaxaca de Juárez, Oaxaca CP 71233', 1, NULL);
 
 --
 -- Índices para tablas volcadas
@@ -371,6 +572,30 @@ ALTER TABLE `detalle_venta`
   ADD KEY `fk_dventa_prod` (`id_producto`);
 
 --
+-- Indices de la tabla `direccion`
+--
+ALTER TABLE `direccion`
+  ADD PRIMARY KEY (`id_direccion`),
+  ADD KEY `fk_dir_cliente` (`id_cliente`);
+
+--
+-- Indices de la tabla `direccion_envio`
+--
+ALTER TABLE `direccion_envio`
+  ADD PRIMARY KEY (`id_direccion`),
+  ADD KEY `fk_direccion_cliente` (`id_cliente`),
+  ADD KEY `idx_direccion_predeterminada` (`id_cliente`,`es_predeterminada`);
+
+--
+-- Indices de la tabla `envio`
+--
+ALTER TABLE `envio`
+  ADD PRIMARY KEY (`id_envio`),
+  ADD KEY `fk_envio_venta` (`id_venta`),
+  ADD KEY `fk_envio_direccion` (`id_direccion`),
+  ADD KEY `idx_envio_estado` (`estado_envio`);
+
+--
 -- Indices de la tabla `historial_usuario`
 --
 ALTER TABLE `historial_usuario`
@@ -383,6 +608,14 @@ ALTER TABLE `historial_usuario`
 --
 ALTER TABLE `inventario`
   ADD PRIMARY KEY (`id_producto`);
+
+--
+-- Indices de la tabla `pago`
+--
+ALTER TABLE `pago`
+  ADD PRIMARY KEY (`id_pago`),
+  ADD KEY `fk_pago_venta` (`id_venta`),
+  ADD KEY `idx_pago_estado` (`estado`);
 
 --
 -- Indices de la tabla `producto`
@@ -410,6 +643,15 @@ ALTER TABLE `registro_actividad`
   ADD KEY `idx_tabla_afectada` (`tabla_afectada`);
 
 --
+-- Indices de la tabla `tarjeta`
+--
+ALTER TABLE `tarjeta`
+  ADD PRIMARY KEY (`id_tarjeta`),
+  ADD KEY `fk_tarjeta_cliente` (`id_cliente`),
+  ADD KEY `idx_tarjeta_predeterminada` (`id_cliente`,`es_predeterminada`),
+  ADD KEY `idx_tarjeta_activa` (`activa`);
+
+--
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -422,7 +664,10 @@ ALTER TABLE `usuario`
 --
 ALTER TABLE `venta`
   ADD PRIMARY KEY (`id_venta`),
-  ADD KEY `fk_venta_cliente` (`id_cliente`);
+  ADD KEY `fk_venta_cliente` (`id_cliente`),
+  ADD KEY `fk_venta_direccion` (`id_direccion_envio`),
+  ADD KEY `idx_venta_estado_envio` (`estado_envio`),
+  ADD KEY `fk_venta_tarjeta` (`id_tarjeta`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -432,7 +677,7 @@ ALTER TABLE `venta`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria`
@@ -450,25 +695,49 @@ ALTER TABLE `cliente`
 -- AUTO_INCREMENT de la tabla `detalle_carrito`
 --
 ALTER TABLE `detalle_carrito`
-  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_item` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `detalle_venta`
 --
 ALTER TABLE `detalle_venta`
-  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT de la tabla `direccion`
+--
+ALTER TABLE `direccion`
+  MODIFY `id_direccion` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `direccion_envio`
+--
+ALTER TABLE `direccion_envio`
+  MODIFY `id_direccion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `envio`
+--
+ALTER TABLE `envio`
+  MODIFY `id_envio` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `historial_usuario`
 --
 ALTER TABLE `historial_usuario`
-  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_historial` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `pago`
+--
+ALTER TABLE `pago`
+  MODIFY `id_pago` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `producto_imagen`
@@ -480,19 +749,25 @@ ALTER TABLE `producto_imagen`
 -- AUTO_INCREMENT de la tabla `registro_actividad`
 --
 ALTER TABLE `registro_actividad`
-  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT de la tabla `tarjeta`
+--
+ALTER TABLE `tarjeta`
+  MODIFY `id_tarjeta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -519,6 +794,25 @@ ALTER TABLE `detalle_venta`
   ADD CONSTRAINT `fk_dventa_venta` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `direccion`
+--
+ALTER TABLE `direccion`
+  ADD CONSTRAINT `direccion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `direccion_envio`
+--
+ALTER TABLE `direccion_envio`
+  ADD CONSTRAINT `fk_direccion_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `envio`
+--
+ALTER TABLE `envio`
+  ADD CONSTRAINT `envio_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `envio_ibfk_2` FOREIGN KEY (`id_direccion`) REFERENCES `direccion` (`id_direccion`) ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `historial_usuario`
 --
 ALTER TABLE `historial_usuario`
@@ -530,6 +824,12 @@ ALTER TABLE `historial_usuario`
 --
 ALTER TABLE `inventario`
   ADD CONSTRAINT `fk_inv_prod` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pago`
+--
+ALTER TABLE `pago`
+  ADD CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_venta`) REFERENCES `venta` (`id_venta`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `producto`
@@ -549,6 +849,12 @@ ALTER TABLE `producto_imagen`
 --
 ALTER TABLE `registro_actividad`
   ADD CONSTRAINT `fk_registro_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tarjeta`
+--
+ALTER TABLE `tarjeta`
+  ADD CONSTRAINT `fk_tarjeta_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `venta`

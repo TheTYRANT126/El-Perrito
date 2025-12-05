@@ -5,7 +5,7 @@ const ensureAccountLink = (status) => {
   if (!account) return null;
 
   if (status === 'anon') {
-    account.href = pageUrl('login.html');
+    account.href = pageUrl('public/login.html');
   } else {
     account.href = pageUrl('public/account.html');
   }

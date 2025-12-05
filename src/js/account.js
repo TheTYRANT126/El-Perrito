@@ -522,7 +522,7 @@ document.getElementById('tile-logout').addEventListener('click', async (e) => {
     e.preventDefault();
     const r = await fetch('../api/auth_logout.php', { method: 'POST', credentials: 'include' });
     if (r.ok) {
-        location.href = '../index.html';
+        location.href = 'index.html';
     } else {
         alert('Error al cerrar sesión');
     }

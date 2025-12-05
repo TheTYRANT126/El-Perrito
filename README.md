@@ -1,2 +1,1 @@
-# El-Perrito
-# PU-El-perrito
+# El-Perrito, sistema web para la tienda El perrito xd

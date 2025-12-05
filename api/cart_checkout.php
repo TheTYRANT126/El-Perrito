@@ -29,6 +29,19 @@ if (!$id_direccion_envio) {
   }
 }
 
+// Obtener ID de tarjeta (opcional, puede venir de POST)
+$id_tarjeta = isset($_POST['id_tarjeta']) ? (int)$_POST['id_tarjeta'] : null;
+
+// Si no se especifica tarjeta, intentar obtener la predeterminada
+if (!$id_tarjeta) {
+  $st_card = $pdo->prepare("SELECT id_tarjeta FROM tarjeta WHERE id_cliente=? AND es_predeterminada=1 AND activa=1 LIMIT 1");
+  $st_card->execute([$cid]);
+  $card_default = $st_card->fetch();
+  if ($card_default) {
+    $id_tarjeta = (int)$card_default['id_tarjeta'];
+  }
+}
+
 $pdo->beginTransaction();
 try {
   $items = $pdo->prepare("SELECT id_producto, cantidad, precio_unitario FROM DETALLE_CARRITO WHERE id_carrito=?");
@@ -57,7 +70,7 @@ try {
     $direccion_envio_texto = $cliente ? $cliente['direccion'] : null;
   }
 
-  $pdo->prepare("INSERT INTO VENTA(id_cliente, total, estado_pago, direccion_envio, id_direccion_envio) VALUES (?, ?, 'pagado', ?, ?)")->execute([$cid, $total, $direccion_envio_texto, $id_direccion_envio]);
+  $pdo->prepare("INSERT INTO VENTA(id_cliente, total, estado_pago, direccion_envio, id_direccion_envio, id_tarjeta) VALUES (?, ?, 'pagado', ?, ?, ?)")->execute([$cid, $total, $direccion_envio_texto, $id_direccion_envio, $id_tarjeta]);
   $id_venta = (int)$pdo->lastInsertId();
 
   $insD = $pdo->prepare("INSERT INTO DETALLE_VENTA(id_venta, id_producto, cantidad, precio_unitario) VALUES (?,?,?,?)");

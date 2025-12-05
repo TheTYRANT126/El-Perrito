@@ -159,9 +159,9 @@ if (isset($_SESSION['cliente_id'])) {
         
         <div class="actions">
             <h2>Acciones Rápidas</h2>
-            <button onclick="window.location.href='../login.html'">Ir a Login</button>
+            <button onclick="window.location.href='login.html'">Ir a Login</button>
             <button onclick="window.location.href='cart.html'">Ver Carrito</button>
-            <button onclick="window.location.href='../index.html'">Ir a Inicio</button>
+            <button onclick="window.location.href='index.html'">Ir a Inicio</button>
             <button onclick="testLogout()">Cerrar Sesión</button>
             <button onclick="window.location.reload()">Recargar</button>
         </div>

@@ -35,7 +35,7 @@ async function handleLoginSubmit(event) {
     const response = await loginUser(payload);
 
     if (response.ok && (response.body === 'OK_CLIENTE' || response.body === 'OK_ADMIN')) {
-      window.location.href = pageUrl('index.html');
+      window.location.href = pageUrl('public/index.html');
       return;
     }
 
@@ -66,7 +66,7 @@ async function handleRegisterSubmit(event) {
     if (response.ok && response.body === 'OK') {
       showMessage(feedbackNode, 'Registro exitoso, redirigiendo...', 'success');
       setTimeout(() => {
-        window.location.href = pageUrl('login.html');
+        window.location.href = pageUrl('public/login.html');
       }, 1200);
       return;
     }

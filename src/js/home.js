@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (!r.ok) {
                             if (r.status === 401 || responseText.includes('NO_LOGIN')) {
                                 alert('Inicia sesión para agregar al carrito');
-                                window.location.href = pageUrl('login.html');
+                                window.location.href = pageUrl('public/login.html');
                             } else {
                                 alert('Error al agregar al carrito: ' + responseText);
                             }

@@ -306,6 +306,12 @@ small.muted {
   cursor: pointer
 }
 
+.cart-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .summary {
   background: #fff;
   border-radius: 20px;
@@ -313,7 +319,40 @@ small.muted {
   box-shadow: var(--shadow);
   text-align: center;
   height: fit-content;
-  /* <-- Add this line */
+}
+
+.summary h3 {
+  color: #ec4899;
+}
+
+.shipping-selector {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.shipping-selector h3 {
+  color: var(--blue);
+  text-align: center;
+}
+
+.payment-selector {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.payment-selector h3 {
+  color: var(--blue);
+  text-align: center;
+}
+
+.card-selector {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 8px;
 }
 
 .account-grid {
@@ -777,8 +816,9 @@ small.muted {
 }
 
 .address-selector {
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
+  margin-top: 8px;
 }
 
 .address-option {
@@ -803,6 +843,48 @@ small.muted {
 }
 
 .address-option input[type="radio"] {
+  margin-right: 12px;
+}
+
+/* =========================
+   Tarjetas
+   ========================= */
+.card-item {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card-item:hover {
+  border-color: var(--blue);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-option {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.card-option:hover {
+  border-color: var(--blue);
+  background: #f0f5ff;
+}
+
+.card-option.selected {
+  border-color: var(--blue);
+  background: #f0f5ff;
+  box-shadow: 0 0 0 3px rgba(47, 95, 190, 0.1);
+}
+
+.card-option input[type="radio"] {
   margin-right: 12px;
 }
 

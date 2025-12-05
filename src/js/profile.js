@@ -23,7 +23,7 @@ verifyForm.addEventListener('submit', async (e) => {
 
         if (!sessionResponse.ok) {
             verifyMsg.textContent = 'Error: Debes iniciar sesión';
-            setTimeout(() => window.location.href = '../login.html', 2000);
+            setTimeout(() => window.location.href = 'login.html', 2000);
             return;
         }
 
