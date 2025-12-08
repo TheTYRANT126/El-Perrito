@@ -7,6 +7,7 @@ const verifyMsg = document.getElementById('verify-msg');
 const editMsg = document.getElementById('edit-msg');
 
 let userData = null;
+let isAdmin = false; // Flag para saber si es admin/operador
 
 // Paso 1: Verificar contraseña
 verifyForm.addEventListener('submit', async (e) => {
@@ -16,10 +17,20 @@ verifyForm.addEventListener('submit', async (e) => {
     try {
         const formData = new FormData(verifyForm);
 
-        // obtener el email del usuario actual
-        const sessionResponse = await fetch('../api/client_info.php', {
+        // Intentar obtener info del usuario - primero como admin, luego como cliente
+        let sessionResponse = await fetch('../api/admin_info.php', {
             credentials: 'include'
         });
+
+        if (sessionResponse.ok) {
+            isAdmin = true;
+        } else {
+            // Si no es admin, intentar como cliente
+            sessionResponse = await fetch('../api/client_info.php', {
+                credentials: 'include'
+            });
+            isAdmin = false;
+        }
 
         if (!sessionResponse.ok) {
             verifyMsg.textContent = 'Error: Debes iniciar sesión';
@@ -30,8 +41,9 @@ verifyForm.addEventListener('submit', async (e) => {
         const sessionData = await sessionResponse.json();
         formData.append('email', sessionData.email);
 
-        // Verificar la contraseña
-        const response = await fetch('../api/verify_password.php', {
+        // Verificar la contraseña con el endpoint correcto
+        const verifyEndpoint = isAdmin ? '../api/verify_password_admin.php' : '../api/verify_password.php';
+        const response = await fetch(verifyEndpoint, {
             method: 'POST',
             body: formData,
             credentials: 'include'
@@ -90,7 +102,9 @@ editForm.addEventListener('submit', async (e) => {
     try {
         const formData = new FormData(editForm);
 
-        const response = await fetch('../api/update_profile.php', {
+        // Usar el endpoint correcto según el tipo de usuario
+        const updateEndpoint = isAdmin ? '../api/update_profile_admin.php' : '../api/update_profile.php';
+        const response = await fetch(updateEndpoint, {
             method: 'POST',
             body: formData,
             credentials: 'include'
