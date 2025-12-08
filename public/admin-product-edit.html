@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Editar Producto</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/admin-dashboard.css">
+    <style>
+        .product-edit-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 24px;
+        }
+
+        .image-section {
+            position: sticky;
+            top: 100px;
+        }
+
+        .main-image-container {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-image {
+            width: 100%;
+            height: 350px;
+            object-fit: contain;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .thumbnails {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .thumbnail {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.2s;
+        }
+
+        .thumbnail:hover {
+            border-color: #2c5db5;
+        }
+
+        .thumbnail.active {
+            border-color: #2c5db5;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #f8f9fa;
+        }
+
+        .upload-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .upload-area {
+            border: 2px dashed #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: #2c5db5;
+            background: #f0f7ff;
+        }
+
+        .upload-area.dragging {
+            border-color: #2c5db5;
+            background: #f0f7ff;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: #2c5db5;
+        }
+
+        .product-id-badge {
+            background: #f0f7ff;
+            color: #2c5db5;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 992px) {
+            .product-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .image-section {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="../index.html">Inicio</a>
+            <a id="accountLink" href="login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container product-edit-container">
+        <div class="product-layout">
+            <!-- Sección de imágenes -->
+            <div class="image-section">
+                <div class="main-image-container">
+                    <img id="mainImage" class="main-image" src="../src/assets/placeholder.png" alt="Producto">
+                </div>
+
+                <div class="thumbnails" id="thumbnails">
+                    <!-- Se llenarán dinámicamente -->
+                </div>
+
+                <div class="upload-section">
+                    <h3 style="margin-top: 0;">Subir Imágenes</h3>
+                    <p style="color: #64748b; font-size: 14px;">Máximo 4 imágenes. Formatos: JPG, PNG, GIF. Tamaño máximo: 5MB</p>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <p>📸 Arrastra imágenes aquí o haz clic para seleccionar</p>
+                        <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                    </div>
+
+                    <div id="imageCount" style="margin-top: 12px; color: #64748b; font-size: 14px;"></div>
+                </div>
+            </div>
+
+            <!-- Sección del formulario -->
+            <div class="form-section">
+                <div class="form-header">
+                    <h2 id="formTitle">Crear Producto</h2>
+                    <span id="productIdBadge" class="product-id-badge" style="display: none;"></span>
+                </div>
+
+                <form id="productForm">
+                    <input type="hidden" id="productId" name="id_producto">
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nombre">Nombre del Producto *</label>
+                            <input type="text" id="nombre" name="nombre" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="precio">Precio *</label>
+                            <input type="number" id="precio" name="precio_venta" step="0.01" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="categoria">Categoría *</label>
+                            <select id="categoria" name="id_categoria" required>
+                                <option value="">Selecciona una categoría</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="caducidad">Fecha de Caducidad</label>
+                            <input type="date" id="caducidad" name="caducidad">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="stock">Existencias *</label>
+                            <input type="number" id="stock" name="stock" min="0" value="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="stock_minimo">Stock Mínimo</label>
+                            <input type="number" id="stock_minimo" name="stock_minimo" min="0" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="es_medicamento" name="es_medicamento" value="1">
+                            Es medicamento (requiere prescripción)
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="6"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn outline" onclick="window.history.back()">Cancelar</button>
+                        <button type="submit" class="btn primary">Publicar Producto</button>
+                    </div>
+                </form>
+
+                <p id="msg" style="margin-top: 16px; font-weight: 600;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../src/js/header.js"></script>
+    <script src="../src/js/admin-product-edit.js"></script>
+</body>
+
+</html>

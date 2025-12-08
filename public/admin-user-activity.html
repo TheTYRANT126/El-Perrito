@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Registro de Actividad</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/admin-dashboard.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="../index.html">Inicio</a>
+            <a id="accountLink" href="login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+                <h1 style="color:#2c5db5; font-size:36px; margin:0;">Registro de Actividad</h1>
+                <p id="userName" style="color:#64748b; font-size:18px; margin:8px 0 0 0;"></p>
+            </div>
+            <button class="btn outline" onclick="window.history.back()">← Volver</button>
+        </div>
+
+        <div class="card">
+            <div style="margin-bottom: 20px;">
+                <p style="color:#64748b;">Este registro muestra todas las acciones realizadas por este usuario.</p>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha y Hora</th>
+                            <th>Acción</th>
+                            <th>Tabla Afectada</th>
+                            <th>ID Afectado</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center;">Cargando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../src/js/header.js"></script>
+    <script src="../src/js/admin-user-activity.js"></script>
+</body>
+
+</html>

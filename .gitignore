@@ -1,0 +1,10 @@
+# Archivos de contexto para IAs
+claude.md
+gemini.md
+.claude/
+Documentación/
+Aplicacion/
+# Archivos y directorios de pruebas unitarias
+/vendor/
+/tests/
+phpunit.xml

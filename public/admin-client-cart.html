@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Carrito del Cliente</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/admin-dashboard.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="admin-dashboard.html">← Volver al Panel</a>
+            <a href="../index.html">Inicio</a>
+            <a id="accountLink" href="login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <div>
+                <h1 style="color:#2c5db5; font-size:36px; margin:0;">Carrito del Cliente</h1>
+                <p id="clientName" style="color:#64748b; font-size:18px; margin:8px 0 0 0;"></p>
+            </div>
+            <button class="btn outline" onclick="window.history.back()">← Volver</button>
+        </div>
+
+        <div class="card">
+            <div class="table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Imagen</th>
+                            <th>Precio Unitario</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center;">Cargando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="summary" style="text-align: right; margin-top: 20px;">
+                <h3 id="total" style="color:#2c5db5;">Total: $0.00</h3>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../src/js/header.js"></script>
+    <script src="../src/js/admin-client-cart.js"></script>
+</body>
+
+</html>

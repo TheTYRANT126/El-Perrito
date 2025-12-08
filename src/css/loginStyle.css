@@ -1,0 +1,19 @@
+@import url('./main.css');
+
+body.bg {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.center.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card.form {
+  max-width: 420px;
+  width: 100%;
+}

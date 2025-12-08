@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>El Perrito — Acceder</title>
+  <link rel="stylesheet" href="../src/css/loginStyle.css">
+</head>
+
+<body class="bg">
+  <header class="header">
+    <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+    <nav class="nav">
+      <a href="../index.html">Inicio</a>
+      <a class="disabled" href="#">Promociones</a>
+      <a href="cart.html">Carrito</a>
+      <a id="accountLink" href="login.html">Cuenta</a>
+    </nav>
+  </header>
+
+  <div class="center container">
+    <div class="card form">
+      <h2>Formulario acceso</h2>
+
+      <form id="loginForm" action="../api/auth_login.php" method="post">
+        <input type="email" name="email" placeholder="Ingresa tu E-mail" required>
+        <input type="password" name="password" placeholder="Ingresa tu contraseña" required>
+        <!-- fallback si no hay JS -->
+        <input type="hidden" name="redirect" value="../index.html">
+        <button class="btn primary" type="submit">Acceder</button>
+      </form>
+      <p>¿No tienes cuenta? <a href="register.html">Crea una</a></p>
+      <p id="msg"></p>
+
+
+    </div>
+  </div>
+  <script type="module" src="../src/js/header.js"></script>
+  <script type="module" src="../src/js/login.js"></script>
+</body>
+
+
+
+</html>

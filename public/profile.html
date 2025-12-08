@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>El Perrito — Editar Perfil</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+</head>
+
+<body class="bg">
+    <header class="header">
+        <a href="../index.html"><img class="logo" src="../src/assets/logo.png" alt="El Perrito"></a>
+        <nav class="nav">
+            <a href="../index.html">Inicio</a>
+            <a class="disabled" href="#">Promociones</a>
+            <a href="cart.html">Carrito</a>
+            <a id="accountLink" href="login.html">Cuenta</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 style="color:#2c5db5; font-size:48px; margin-top:0">Editar Perfil</h1>
+
+        <!-- Paso 1: Verificación de contraseña -->
+        <div id="verify-section" class="card" style="max-width: 500px; margin: 0 auto;">
+            <h2 style="color:#2c5db5; margin-top:0;">Verificar Identidad</h2>
+            <p>Por tu seguridad, ingresa tu contraseña actual para continuar.</p>
+            <form id="verifyForm" style="margin-top: 20px;">
+                <div class="form-group">
+                    <label for="current_password">Contraseña actual</label>
+                    <input id="current_password" name="password" type="password" placeholder="Ingresa tu contraseña"
+                        required>
+                </div>
+                <button class="btn primary" type="submit" style="width: 100%; margin-top: 16px;">Verificar</button>
+            </form>
+            <p id="verify-msg" style="color: #d00000; margin-top: 12px;"></p>
+        </div>
+
+        <!-- Paso 2: Formulario de edición (oculto inicialmente) -->
+        <div id="edit-section" class="card" style="max-width: 720px; margin: 0 auto; display: none;">
+            <h2 style="color:#2c5db5; margin-top:0;">Actualizar Datos</h2>
+
+            <form id="editForm">
+                <div class="grid2">
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" name="nombre" type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input id="apellido" name="apellido" type="text" required>
+                    </div>
+                </div>
+
+                <div class="grid2">
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input id="email" name="email" type="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input id="telefono" name="telefono" type="tel">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input id="direccion" name="direccion" type="text">
+                </div>
+
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+
+                <h3 style="color:#2c5db5; margin-bottom: 16px;">Cambiar Contraseña (Opcional)</h3>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 16px;">Deja estos campos vacíos si no deseas
+                    cambiar tu contraseña.</p>
+
+                <div class="grid2">
+                    <div class="form-group">
+                        <label for="new_password">Nueva contraseña</label>
+                        <input id="new_password" name="new_password" type="password" placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Confirmar nueva contraseña</label>
+                        <input id="confirm_password" name="confirm_password" type="password">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button class="btn primary" type="submit" style="flex: 1;">Guardar Cambios</button>
+                    <a href="login.html" class="btn outline"
+                        style="flex: 1; display: flex; align-items: center; justify-content: center; text-decoration: none;">Cancelar</a>
+                </div>
+            </form>
+            <p id="edit-msg" style="margin-top: 12px; font-weight: 600;"></p>
+        </div>
+    </div>
+
+    <script type="module" src="../src/js/header.js"></script>
+    <script src="../src/js/profile.js"></script>
+</body>
+
+</html>
