@@ -22,7 +22,7 @@ if (!$password) {
 
 try {
     // Verificar contraseña
-    $st = $pdo->prepare("SELECT password_hash, email FROM CLIENTE WHERE id_cliente = ?");
+    $st = $pdo->prepare("SELECT password_hash, email FROM cliente WHERE id_cliente = ?");
     $st->execute([$cliente_id]);
     $user = $st->fetch();
     
@@ -43,27 +43,27 @@ try {
     
     try {
         // 1. Eliminar detalles de carritos del cliente
-        $st = $pdo->prepare("DELETE dc FROM DETALLE_CARRITO dc 
-                           INNER JOIN CARRITO c ON c.id_carrito = dc.id_carrito 
+        $st = $pdo->prepare("DELETE dc FROM detalle_carrito dc
+                           INNER JOIN carrito c ON c.id_carrito = dc.id_carrito
                            WHERE c.id_cliente = ?");
         $st->execute([$cliente_id]);
-        
+
         // 2. Eliminar carritos del cliente
-        $st = $pdo->prepare("DELETE FROM CARRITO WHERE id_cliente = ?");
+        $st = $pdo->prepare("DELETE FROM carrito WHERE id_cliente = ?");
         $st->execute([$cliente_id]);
-        
+
         // 3. Eliminar detalles de ventas del cliente
-        $st = $pdo->prepare("DELETE dv FROM DETALLE_VENTA dv 
-                           INNER JOIN VENTA v ON v.id_venta = dv.id_venta 
+        $st = $pdo->prepare("DELETE dv FROM detalle_venta dv
+                           INNER JOIN venta v ON v.id_venta = dv.id_venta
                            WHERE v.id_cliente = ?");
         $st->execute([$cliente_id]);
-        
+
         // 4. Eliminar ventas del cliente
-        $st = $pdo->prepare("DELETE FROM VENTA WHERE id_cliente = ?");
+        $st = $pdo->prepare("DELETE FROM venta WHERE id_cliente = ?");
         $st->execute([$cliente_id]);
-        
+
         // 5. Eliminar el cliente
-        $st = $pdo->prepare("DELETE FROM CLIENTE WHERE id_cliente = ?");
+        $st = $pdo->prepare("DELETE FROM cliente WHERE id_cliente = ?");
         $st->execute([$cliente_id]);
         
         // Commit de la transacción

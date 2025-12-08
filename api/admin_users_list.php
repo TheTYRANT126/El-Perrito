@@ -44,13 +44,13 @@ try {
     }
     
     // Contar total de usuarios
-    $count_stmt = $pdo->prepare("SELECT COUNT(*) as total FROM USUARIO WHERE $where");
+    $count_stmt = $pdo->prepare("SELECT COUNT(*) as total FROM usuario WHERE $where");
     $count_stmt->execute($params);
     $total = $count_stmt->fetch()['total'];
-    
+
     // Obtener usuarios con paginación
     $sql = "
-        SELECT 
+        SELECT
             id_usuario,
             nombre,
             apellido,
@@ -59,7 +59,7 @@ try {
             activo,
             fecha_registro,
             fecha_ultima_modificacion
-        FROM USUARIO
+        FROM usuario
         WHERE $where
         ORDER BY id_usuario DESC
         LIMIT ? OFFSET ?

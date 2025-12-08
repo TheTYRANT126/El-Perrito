@@ -47,7 +47,7 @@ try {
     $pdo->beginTransaction();
     
     // Obtener datos actuales
-    $stmt = $pdo->prepare("SELECT * FROM USUARIO WHERE id_usuario = ?");
+    $stmt = $pdo->prepare("SELECT * FROM usuario WHERE id_usuario = ?");
     $stmt->execute([$id_usuario]);
     $datos_actuales = $stmt->fetch();
     
@@ -58,7 +58,7 @@ try {
     }
     
     // Verificar si el email ya existe en otro usuario
-    $stmt = $pdo->prepare("SELECT id_usuario FROM USUARIO WHERE email = ? AND id_usuario != ?");
+    $stmt = $pdo->prepare("SELECT id_usuario FROM usuario WHERE email = ? AND id_usuario != ?");
     $stmt->execute([$email, $id_usuario]);
     if ($stmt->fetch()) {
         $pdo->rollBack();
@@ -107,7 +107,7 @@ try {
     }
     
     // Actualizar usuario
-    $sql = "UPDATE USUARIO SET 
+    $sql = "UPDATE usuario SET
             nombre = ?,
             apellido = ?,
             email = ?,
@@ -135,7 +135,7 @@ try {
     log_actividad(
         $id_modificador,
         'editar',
-        'USUARIO',
+        'usuario',
         $id_usuario,
         "Modificó el usuario $nombre $apellido (ID: $id_usuario)"
     );

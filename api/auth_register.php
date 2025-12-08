@@ -44,16 +44,16 @@ if (strlen($pass) < 6) {
 }
 
 try {
-    $st = $pdo->prepare("SELECT 1 FROM CLIENTE WHERE email=?");
+    $st = $pdo->prepare("SELECT 1 FROM cliente WHERE email=?");
     $st->execute([$email]);
-    if ($st->fetch()) { 
-        http_response_code(409); 
-        echo "EMAIL_YA_EXISTE"; 
-        exit; 
+    if ($st->fetch()) {
+        http_response_code(409);
+        echo "EMAIL_YA_EXISTE";
+        exit;
     }
 
     $hash = password_hash($pass, PASSWORD_BCRYPT);
-    $st = $pdo->prepare("INSERT INTO CLIENTE(nombre, apellido, email, telefono, direccion, password_hash) VALUES (?,?,?,?,?,?)");
+    $st = $pdo->prepare("INSERT INTO cliente(nombre, apellido, email, telefono, direccion, password_hash) VALUES (?,?,?,?,?,?)");
     $st->execute([$nombre,$apellido,$email,$telefono,$direccion,$hash]);
     
 

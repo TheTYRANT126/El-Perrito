@@ -67,7 +67,7 @@ if (!empty($curp) && !preg_match('/^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]{2}$/', $cu
 
 try {
     // Verificar que el email no exista
-    $stmt = $pdo->prepare("SELECT id_usuario FROM USUARIO WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id_usuario FROM usuario WHERE email = ?");
     $stmt->execute([$email]);
 
     if ($stmt->fetch()) {
@@ -81,7 +81,7 @@ try {
 
     // Insertar usuario
     $stmt = $pdo->prepare("
-        INSERT INTO USUARIO (
+        INSERT INTO usuario (
             nombre, apellido, email, password_hash,
             telefono, curp, fecha_nacimiento, direccion,
             rol, activo, fecha_registro
@@ -106,7 +106,7 @@ try {
     log_actividad(
         $_SESSION['usuario_id'],
         'crear',
-        'USUARIO',
+        'usuario',
         $id_usuario_nuevo,
         "Creó usuario: $nombre $apellido ($email) con rol: $rol"
     );

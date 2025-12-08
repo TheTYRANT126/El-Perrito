@@ -41,7 +41,7 @@ try {
     $pdo->beginTransaction();
 
     // Obtener datos actuales del usuario
-    $stmt = $pdo->prepare("SELECT nombre, apellido, activo FROM USUARIO WHERE id_usuario = ?");
+    $stmt = $pdo->prepare("SELECT nombre, apellido, activo FROM usuario WHERE id_usuario = ?");
     $stmt->execute([$id_usuario]);
     $usuario = $stmt->fetch();
 
@@ -67,7 +67,7 @@ try {
 
     // Actualizar estado del usuario
     $stmt = $pdo->prepare("
-        UPDATE USUARIO
+        UPDATE usuario
         SET activo = ?,
             fecha_ultima_modificacion = NOW()
         WHERE id_usuario = ?
@@ -91,7 +91,7 @@ try {
     log_actividad(
         $_SESSION['usuario_id'],
         $accion,
-        'USUARIO',
+        'usuario',
         $id_usuario,
         $descripcion
     );

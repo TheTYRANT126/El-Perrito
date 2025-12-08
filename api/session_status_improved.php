@@ -23,7 +23,7 @@ else if (isset($_SESSION['usuario_id'])) {
     // Si no hay apellido en sesión, obtenerlo de la base de datos
     if (empty($response['apellido']) || empty($response['rol'])) {
         try {
-            $stmt = $pdo->prepare("SELECT nombre, apellido, rol FROM USUARIO WHERE id_usuario = ?");
+            $stmt = $pdo->prepare("SELECT nombre, apellido, rol FROM usuario WHERE id_usuario = ?");
             $stmt->execute([$_SESSION['usuario_id']]);
             if ($user = $stmt->fetch()) {
                 $response['nombre'] = $user['nombre'];

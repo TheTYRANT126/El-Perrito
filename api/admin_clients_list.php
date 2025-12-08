@@ -31,13 +31,13 @@ try {
     }
     
     // Contar total de clientes
-    $count_stmt = $pdo->prepare("SELECT COUNT(*) as total FROM CLIENTE WHERE $where");
+    $count_stmt = $pdo->prepare("SELECT COUNT(*) as total FROM cliente WHERE $where");
     $count_stmt->execute($params);
     $total = $count_stmt->fetch()['total'];
-    
+
     // Obtener clientes con paginación
     $sql = "
-        SELECT 
+        SELECT
             id_cliente,
             nombre,
             apellido,
@@ -46,7 +46,7 @@ try {
             direccion,
             fecha_registro,
             estado
-        FROM CLIENTE
+        FROM cliente
         WHERE $where
         ORDER BY id_cliente DESC
         LIMIT ? OFFSET ?

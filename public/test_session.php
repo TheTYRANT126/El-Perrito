@@ -19,7 +19,7 @@ $debug_info = [
 $cliente_info = null;
 if (isset($_SESSION['cliente_id'])) {
     try {
-        $st = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM CLIENTE WHERE id_cliente = ?");
+        $st = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM cliente WHERE id_cliente = ?");
         $st->execute([$_SESSION['cliente_id']]);
         $cliente_info = $st->fetch();
     } catch (Exception $e) {
@@ -31,7 +31,7 @@ if (isset($_SESSION['cliente_id'])) {
 $usuario_info = null;
 if (isset($_SESSION['usuario_id'])) {
     try {
-        $st = $pdo->prepare("SELECT id_usuario, nombre, email, rol FROM USUARIO WHERE id_usuario = ?");
+        $st = $pdo->prepare("SELECT id_usuario, nombre, email, rol FROM usuario WHERE id_usuario = ?");
         $st->execute([$_SESSION['usuario_id']]);
         $usuario_info = $st->fetch();
     } catch (Exception $e) {
@@ -43,12 +43,12 @@ if (isset($_SESSION['usuario_id'])) {
 $carrito_info = null;
 if (isset($_SESSION['cliente_id'])) {
     try {
-        $st = $pdo->prepare("SELECT * FROM CARRITO WHERE id_cliente = ? AND estado = 'activo' ORDER BY id_carrito DESC LIMIT 1");
+        $st = $pdo->prepare("SELECT * FROM carrito WHERE id_cliente = ? AND estado = 'activo' ORDER BY id_carrito DESC LIMIT 1");
         $st->execute([$_SESSION['cliente_id']]);
         $carrito_info = $st->fetch();
-        
+
         if ($carrito_info) {
-            $st2 = $pdo->prepare("SELECT COUNT(*) as items, SUM(cantidad) as total_cantidad FROM DETALLE_CARRITO WHERE id_carrito = ?");
+            $st2 = $pdo->prepare("SELECT COUNT(*) as items, SUM(cantidad) as total_cantidad FROM detalle_carrito WHERE id_carrito = ?");
             $st2->execute([$carrito_info['id_carrito']]);
             $carrito_stats = $st2->fetch();
             $carrito_info['stats'] = $carrito_stats;

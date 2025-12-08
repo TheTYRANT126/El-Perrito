@@ -23,7 +23,7 @@ class CrudProducto
 
     public function listar(array $filters = []): array
     {
-        $sql = 'SELECT id_producto, nombre, precio_venta, imagen FROM PRODUCTO WHERE activo = 1';
+        $sql = 'SELECT id_producto, nombre, precio_venta, imagen FROM producto WHERE activo = 1';
         $params = [];
 
         if (!empty($filters['categoria'])) {
@@ -59,8 +59,8 @@ class CrudProducto
         $stmt = $this->pdo->prepare(
             'SELECT p.id_producto, p.nombre, p.descripcion, p.precio_venta, p.imagen, '
             . 'c.nombre AS categoria '
-            . 'FROM PRODUCTO p '
-            . 'JOIN CATEGORIA c ON c.id_categoria = p.id_categoria '
+            . 'FROM producto p '
+            . 'JOIN categoria c ON c.id_categoria = p.id_categoria '
             . 'WHERE p.id_producto = :id AND p.activo = 1'
         );
         $stmt->execute([':id' => $idProducto]);

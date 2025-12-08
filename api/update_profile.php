@@ -28,9 +28,9 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 try {
     $pdo->beginTransaction();
-    
+
     // Verificar si el email ya existe para otro usuario
-    $st = $pdo->prepare("SELECT id_cliente FROM CLIENTE WHERE email = ? AND id_cliente != ?");
+    $st = $pdo->prepare("SELECT id_cliente FROM cliente WHERE email = ? AND id_cliente != ?");
     $st->execute([$email, $cliente_id]);
     if ($st->fetch()) {
         $pdo->rollBack();
@@ -38,9 +38,9 @@ try {
         echo 'El email ya está en uso';
         exit;
     }
-    
+
     // Actualizar datos básicos
-    $sql = "UPDATE CLIENTE SET nombre = ?, apellido = ?, email = ?, telefono = ?, direccion = ?";
+    $sql = "UPDATE cliente SET nombre = ?, apellido = ?, email = ?, telefono = ?, direccion = ?";
     $params = [$nombre, $apellido, $email, $telefono, $direccion];
     
     // Si hay nueva contraseña, actualizar también

@@ -19,7 +19,7 @@ if (!$id_venta) {
 }
 
 // Verificar que la venta pertenece al cliente y obtener su estado
-$sql = "SELECT estado_envio FROM VENTA WHERE id_venta = :id AND id_cliente = :cid";
+$sql = "SELECT estado_envio FROM venta WHERE id_venta = :id AND id_cliente = :cid";
 $st = $pdo->prepare($sql);
 $st->execute([':id' => $id_venta, ':cid' => $cid]);
 $venta = $st->fetch();
@@ -45,7 +45,7 @@ if ($venta['estado_envio'] === 'cancelado') {
 }
 
 // Actualizar estado del pedido a cancelado
-$sql_update = "UPDATE VENTA SET estado_envio = 'cancelado' WHERE id_venta = :id";
+$sql_update = "UPDATE venta SET estado_envio = 'cancelado' WHERE id_venta = :id";
 $st_update = $pdo->prepare($sql_update);
 
 try {

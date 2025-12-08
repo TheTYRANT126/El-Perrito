@@ -23,7 +23,7 @@ if ($id_cliente <= 0) {
 
 try {
     // 1. Obtener información del cliente
-    $stmt_cliente = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM CLIENTE WHERE id_cliente = ?");
+    $stmt_cliente = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM cliente WHERE id_cliente = ?");
     $stmt_cliente->execute([$id_cliente]);
     $cliente = $stmt_cliente->fetch(PDO::FETCH_ASSOC);
 
@@ -34,7 +34,7 @@ try {
     }
 
     // 2. Obtener todos los pedidos (ventas) del cliente
-    $stmt_pedidos = $pdo->prepare("SELECT id_venta, fecha, total FROM VENTA WHERE id_cliente = ? ORDER BY fecha DESC");
+    $stmt_pedidos = $pdo->prepare("SELECT id_venta, fecha, total FROM venta WHERE id_cliente = ? ORDER BY fecha DESC");
     $stmt_pedidos->execute([$id_cliente]);
     $pedidos = $stmt_pedidos->fetchAll(PDO::FETCH_ASSOC);
 
@@ -45,13 +45,13 @@ try {
         $id_venta = $pedido['id_venta'];
         
         $stmt_items = $pdo->prepare("
-            SELECT 
+            SELECT
                 dv.cantidad,
                 dv.precio_unitario,
                 p.nombre AS nombre_producto,
                 p.imagen AS imagen_producto
-            FROM DETALLE_VENTA dv
-            JOIN PRODUCTO p ON p.id_producto = dv.id_producto
+            FROM detalle_venta dv
+            JOIN producto p ON p.id_producto = dv.id_producto
             WHERE dv.id_venta = ?
         ");
         $stmt_items->execute([$id_venta]);

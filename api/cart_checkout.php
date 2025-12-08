@@ -5,7 +5,7 @@ require_once __DIR__ . '/cart_helpers.php';
 require_login_cliente();
 $cid = (int)$_SESSION['cliente_id'];
 
-$st = $pdo->prepare("SELECT id_carrito FROM CARRITO WHERE id_cliente=? AND estado='activo' ORDER BY id_carrito DESC LIMIT 1");
+$st = $pdo->prepare("SELECT id_carrito FROM carrito WHERE id_cliente=? AND estado='activo' ORDER BY id_carrito DESC LIMIT 1");
 $st->execute([$cid]);
 if (!($r = $st->fetch())) { http_response_code(400); echo "CARRITO_VACIO"; exit; }
 $id_carrito = (int)$r['id_carrito'];
@@ -44,7 +44,7 @@ if (!$id_tarjeta) {
 
 $pdo->beginTransaction();
 try {
-  $items = $pdo->prepare("SELECT id_producto, cantidad, precio_unitario FROM DETALLE_CARRITO WHERE id_carrito=?");
+  $items = $pdo->prepare("SELECT id_producto, cantidad, precio_unitario FROM detalle_carrito WHERE id_carrito=?");
   $items->execute([$id_carrito]);
   $list = $items->fetchAll();
   if (!$list) throw new Exception('CARRITO_VACIO');
@@ -64,19 +64,19 @@ try {
 
   // Si no hay dirección, usar la del perfil del cliente (compatibilidad con sistema anterior)
   if (!$direccion_envio_texto) {
-    $st_dir = $pdo->prepare("SELECT direccion FROM CLIENTE WHERE id_cliente=?");
+    $st_dir = $pdo->prepare("SELECT direccion FROM cliente WHERE id_cliente=?");
     $st_dir->execute([$cid]);
     $cliente = $st_dir->fetch();
     $direccion_envio_texto = $cliente ? $cliente['direccion'] : null;
   }
 
-  $pdo->prepare("INSERT INTO VENTA(id_cliente, total, estado_pago, direccion_envio, id_direccion_envio, id_tarjeta) VALUES (?, ?, 'pagado', ?, ?, ?)")->execute([$cid, $total, $direccion_envio_texto, $id_direccion_envio, $id_tarjeta]);
+  $pdo->prepare("INSERT INTO venta(id_cliente, total, estado_pago, direccion_envio, id_direccion_envio, id_tarjeta) VALUES (?, ?, 'pagado', ?, ?, ?)")->execute([$cid, $total, $direccion_envio_texto, $id_direccion_envio, $id_tarjeta]);
   $id_venta = (int)$pdo->lastInsertId();
 
-  $insD = $pdo->prepare("INSERT INTO DETALLE_VENTA(id_venta, id_producto, cantidad, precio_unitario) VALUES (?,?,?,?)");
+  $insD = $pdo->prepare("INSERT INTO detalle_venta(id_venta, id_producto, cantidad, precio_unitario) VALUES (?,?,?,?)");
   foreach ($list as $it) { $insD->execute([$id_venta, $it['id_producto'], $it['cantidad'], $it['precio_unitario']]); }
 
-  $pdo->prepare("UPDATE CARRITO SET estado='cerrado' WHERE id_carrito=?")->execute([$id_carrito]);
+  $pdo->prepare("UPDATE carrito SET estado='cerrado' WHERE id_carrito=?")->execute([$id_carrito]);
 
   $pdo->commit();
   echo "OK";

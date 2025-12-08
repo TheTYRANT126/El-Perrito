@@ -23,15 +23,15 @@ if ($id_cliente <= 0) {
 try {
     // Obtener ventas del cliente
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             v.id_venta,
             v.fecha,
             v.total,
             v.estado_pago,
             v.direccion_envio,
             COUNT(dv.id_detalle) as items
-        FROM VENTA v
-        LEFT JOIN DETALLE_VENTA dv ON dv.id_venta = v.id_venta
+        FROM venta v
+        LEFT JOIN detalle_venta dv ON dv.id_venta = v.id_venta
         WHERE v.id_cliente = ?
         GROUP BY v.id_venta
         ORDER BY v.fecha DESC
@@ -43,12 +43,12 @@ try {
     // Para cada venta, obtener los detalles
     foreach ($ventas as &$venta) {
         $stmt = $pdo->prepare("
-            SELECT 
+            SELECT
                 dv.cantidad,
                 dv.precio_unitario,
                 p.nombre
-            FROM DETALLE_VENTA dv
-            JOIN PRODUCTO p ON p.id_producto = dv.id_producto
+            FROM detalle_venta dv
+            JOIN producto p ON p.id_producto = dv.id_producto
             WHERE dv.id_venta = ?
         ");
         

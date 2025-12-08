@@ -19,7 +19,7 @@ if (empty($direccion)) {
 }
 
 // Actualizar dirección del cliente
-$sql = "UPDATE CLIENTE SET direccion = :direccion WHERE id_cliente = :cid";
+$sql = "UPDATE cliente SET direccion = :direccion WHERE id_cliente = :cid";
 $st = $pdo->prepare($sql);
 
 try {

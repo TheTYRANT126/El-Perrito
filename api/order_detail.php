@@ -17,7 +17,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 // Obtener información de la venta
 $sql = "SELECT v.id_venta, v.fecha, v.total, v.estado_pago, v.estado_envio, v.direccion_envio
-        FROM VENTA v
+        FROM venta v
         WHERE v.id_venta = :id AND v.id_cliente = :cid";
 $st = $pdo->prepare($sql);
 $st->execute([':id' => $id_venta, ':cid' => $cid]);
@@ -33,8 +33,8 @@ if (!$venta) {
 $sql_detalle = "SELECT d.id_producto, d.cantidad, d.precio_unitario,
                        p.nombre, p.imagen,
                        (d.cantidad * d.precio_unitario) AS subtotal
-                FROM DETALLE_VENTA d
-                JOIN PRODUCTO p ON p.id_producto = d.id_producto
+                FROM detalle_venta d
+                JOIN producto p ON p.id_producto = d.id_producto
                 WHERE d.id_venta = :id
                 ORDER BY d.id_detalle";
 $st_detalle = $pdo->prepare($sql_detalle);

@@ -23,7 +23,7 @@ if ($id_cliente <= 0) {
 
 try {
     // 1. Obtener información del cliente
-    $stmt_cliente = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM CLIENTE WHERE id_cliente = ?");
+    $stmt_cliente = $pdo->prepare("SELECT id_cliente, nombre, apellido, email FROM cliente WHERE id_cliente = ?");
     $stmt_cliente->execute([$id_cliente]);
     $cliente = $stmt_cliente->fetch(PDO::FETCH_ASSOC);
 
@@ -34,7 +34,7 @@ try {
     }
 
     // 2. Encontrar el carrito activo del cliente
-    $stmt_carrito = $pdo->prepare("SELECT id_carrito FROM CARRITO WHERE id_cliente = ? AND estado = 'activo'");
+    $stmt_carrito = $pdo->prepare("SELECT id_carrito FROM carrito WHERE id_cliente = ? AND estado = 'activo'");
     $stmt_carrito->execute([$id_cliente]);
     $carrito_activo = $stmt_carrito->fetch(PDO::FETCH_ASSOC);
 
@@ -44,14 +44,14 @@ try {
 
         // 3. Obtener los items del carrito
         $stmt_items = $pdo->prepare("
-            SELECT 
+            SELECT
                 p.id_producto,
                 dc.cantidad,
                 dc.precio_unitario AS precio_venta,
                 p.nombre AS nombre_producto,
                 p.imagen AS imagen_producto
-            FROM DETALLE_CARRITO dc
-            JOIN PRODUCTO p ON p.id_producto = dc.id_producto
+            FROM detalle_carrito dc
+            JOIN producto p ON p.id_producto = dc.id_producto
             WHERE dc.id_carrito = ?
         ");
         $stmt_items->execute([$id_carrito]);

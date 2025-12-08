@@ -16,7 +16,7 @@ if (!$email || !$password) {
 }
 
 try {
-    $st = $pdo->prepare("SELECT password_hash FROM CLIENTE WHERE email = ? AND id_cliente = ?");
+    $st = $pdo->prepare("SELECT password_hash FROM cliente WHERE email = ? AND id_cliente = ?");
     $st->execute([$email, $_SESSION['cliente_id']]);
     $user = $st->fetch();
     

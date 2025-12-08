@@ -19,7 +19,7 @@ if (!$email || !$password) {
 
 try {
     // Cliente
-    $st = $pdo->prepare("SELECT id_cliente, password_hash, nombre, estado FROM CLIENTE WHERE email=:e LIMIT 1");
+    $st = $pdo->prepare("SELECT id_cliente, password_hash, nombre, estado FROM cliente WHERE email=:e LIMIT 1");
     $st->execute([':e'=>$email]);
     if ($u = $st->fetch()) {
         if (password_verify($password, $u['password_hash'])) {
@@ -40,7 +40,7 @@ try {
     }
 
     // Admin/Operador
-    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, apellido, rol, activo FROM USUARIO WHERE email=:e LIMIT 1");
+    $st = $pdo->prepare("SELECT id_usuario, password_hash, nombre, apellido, rol, activo FROM usuario WHERE email=:e LIMIT 1");
     $st->execute([':e'=>$email]);
     if ($s = $st->fetch()) {
         if (password_verify($password, $s['password_hash'])) {

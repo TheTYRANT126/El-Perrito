@@ -16,7 +16,7 @@ if ($id_producto <= 0) {
 
 try {
     // Obtener nombre del producto para el log
-    $stmt = $pdo->prepare("SELECT nombre FROM PRODUCTO WHERE id_producto = ?");
+    $stmt = $pdo->prepare("SELECT nombre FROM producto WHERE id_producto = ?");
     $stmt->execute([$id_producto]);
     $producto = $stmt->fetch();
     
@@ -27,14 +27,14 @@ try {
     }
     
     // Soft delete - marcar como inactivo
-    $stmt = $pdo->prepare("UPDATE PRODUCTO SET activo = 0 WHERE id_producto = ?");
+    $stmt = $pdo->prepare("UPDATE producto SET activo = 0 WHERE id_producto = ?");
     $stmt->execute([$id_producto]);
     
     // Registrar actividad
     log_actividad(
         $_SESSION['usuario_id'],
         'eliminar',
-        'PRODUCTO',
+        'producto',
         $id_producto,
         "Marcó como inactivo el producto '{$producto['nombre']}' (ID: $id_producto)"
     );

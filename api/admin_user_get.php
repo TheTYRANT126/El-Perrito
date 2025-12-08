@@ -23,7 +23,7 @@ if ($id <= 0) {
 try {
     // Obtener usuario
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             id_usuario,
             nombre,
             apellido,
@@ -36,7 +36,7 @@ try {
             activo,
             fecha_registro,
             fecha_ultima_modificacion
-        FROM USUARIO
+        FROM usuario
         WHERE id_usuario = ?
     ");
     

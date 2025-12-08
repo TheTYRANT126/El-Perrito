@@ -7,7 +7,7 @@ $cid = (int)$_SESSION['cliente_id'];
 
 header('Content-Type: application/json; charset=utf-8');
 
-$sql = "SELECT direccion FROM CLIENTE WHERE id_cliente = :cid";
+$sql = "SELECT direccion FROM cliente WHERE id_cliente = :cid";
 $st = $pdo->prepare($sql);
 $st->execute([':cid' => $cid]);
 $cliente = $st->fetch();

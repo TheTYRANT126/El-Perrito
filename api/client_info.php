@@ -9,7 +9,7 @@ header('Content-Type: application/json; charset=utf-8');
 $cliente_id = (int)$_SESSION['cliente_id'];
 
 try {
-    $st = $pdo->prepare("SELECT id_cliente, nombre, apellido, email, telefono, direccion FROM CLIENTE WHERE id_cliente = ?");
+    $st = $pdo->prepare("SELECT id_cliente, nombre, apellido, email, telefono, direccion FROM cliente WHERE id_cliente = ?");
     $st->execute([$cliente_id]);
     $cliente = $st->fetch();
     

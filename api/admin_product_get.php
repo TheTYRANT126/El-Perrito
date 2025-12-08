@@ -19,15 +19,15 @@ if ($id <= 0) {
 try {
     // Obtener producto
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             p.*,
             COALESCE(i.stock, 0) as stock,
             COALESCE(i.stock_minimo, 0) as stock_minimo,
             u.nombre as creador_nombre,
             u.apellido as creador_apellido
-        FROM PRODUCTO p
-        LEFT JOIN INVENTARIO i ON i.id_producto = p.id_producto
-        LEFT JOIN USUARIO u ON u.id_usuario = p.id_usuario_creador
+        FROM producto p
+        LEFT JOIN inventario i ON i.id_producto = p.id_producto
+        LEFT JOIN usuario u ON u.id_usuario = p.id_usuario_creador
         WHERE p.id_producto = ?
     ");
     

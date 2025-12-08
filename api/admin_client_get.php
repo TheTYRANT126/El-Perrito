@@ -23,7 +23,7 @@ if ($id_cliente <= 0) {
 try {
     // Obtener cliente
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             id_cliente,
             nombre,
             apellido,
@@ -32,7 +32,7 @@ try {
             direccion,
             fecha_registro,
             estado
-        FROM CLIENTE
+        FROM cliente
         WHERE id_cliente = ?
     ");
     
@@ -47,14 +47,14 @@ try {
     
     // Obtener carrito activo
     $stmt = $pdo->prepare("
-        SELECT 
+        SELECT
             c.id_carrito,
             c.estado,
             c.fecha_creacion,
             COUNT(dc.id_item) as items,
             COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0) as total
-        FROM CARRITO c
-        LEFT JOIN DETALLE_CARRITO dc ON dc.id_carrito = c.id_carrito
+        FROM carrito c
+        LEFT JOIN detalle_carrito dc ON dc.id_carrito = c.id_carrito
         WHERE c.id_cliente = ? AND c.estado = 'activo'
         GROUP BY c.id_carrito
         ORDER BY c.id_carrito DESC
@@ -68,14 +68,14 @@ try {
     $items = [];
     if ($carrito && $carrito['id_carrito']) {
         $stmt = $pdo->prepare("
-            SELECT 
+            SELECT
                 dc.id_item,
                 dc.cantidad,
                 dc.precio_unitario,
                 p.nombre,
                 p.imagen
-            FROM DETALLE_CARRITO dc
-            JOIN PRODUCTO p ON p.id_producto = dc.id_producto
+            FROM detalle_carrito dc
+            JOIN producto p ON p.id_producto = dc.id_producto
             WHERE dc.id_carrito = ?
         ");
         

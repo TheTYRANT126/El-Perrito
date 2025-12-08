@@ -37,7 +37,7 @@ try {
     
     // Actualizar producto
     $stmt = $pdo->prepare("
-        UPDATE PRODUCTO SET
+        UPDATE producto SET
             nombre = ?,
             id_categoria = ?,
             descripcion = ?,
@@ -60,7 +60,7 @@ try {
     
     // Actualizar inventario
     $stmt = $pdo->prepare("
-        UPDATE INVENTARIO SET
+        UPDATE inventario SET
             stock = ?,
             stock_minimo = ?
         WHERE id_producto = ?
@@ -71,7 +71,7 @@ try {
     log_actividad(
         $_SESSION['usuario_id'],
         'editar',
-        'PRODUCTO',
+        'producto',
         $id_producto,
         "Modificó el producto '$nombre' (ID: $id_producto)"
     );

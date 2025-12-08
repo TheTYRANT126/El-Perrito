@@ -62,8 +62,8 @@ try {
     // Contar total de productos (necesita JOIN con inventario si se filtran por stock)
     $count_sql = "
         SELECT COUNT(*) as total
-        FROM PRODUCTO p
-        LEFT JOIN INVENTARIO i ON i.id_producto = p.id_producto
+        FROM producto p
+        LEFT JOIN inventario i ON i.id_producto = p.id_producto
         WHERE $where
     ";
     $count_stmt = $pdo->prepare($count_sql);
@@ -93,10 +93,10 @@ try {
             c.nombre as categoria,
             u.nombre as creador_nombre,
             u.apellido as creador_apellido
-        FROM PRODUCTO p
-        LEFT JOIN INVENTARIO i ON i.id_producto = p.id_producto
-        LEFT JOIN CATEGORIA c ON c.id_categoria = p.id_categoria
-        LEFT JOIN USUARIO u ON u.id_usuario = p.id_usuario_creador
+        FROM producto p
+        LEFT JOIN inventario i ON i.id_producto = p.id_producto
+        LEFT JOIN categoria c ON c.id_categoria = p.id_categoria
+        LEFT JOIN usuario u ON u.id_usuario = p.id_usuario_creador
         WHERE $where
         ORDER BY p.id_producto DESC
         LIMIT ? OFFSET ?

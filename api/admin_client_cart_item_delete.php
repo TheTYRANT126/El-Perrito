@@ -31,7 +31,7 @@ try {
     $pdo->beginTransaction();
 
     // 1. Encontrar el carrito activo del cliente
-    $stmt_carrito = $pdo->prepare("SELECT id_carrito FROM CARRITO WHERE id_cliente = ? AND estado = 'activo'");
+    $stmt_carrito = $pdo->prepare("SELECT id_carrito FROM carrito WHERE id_cliente = ? AND estado = 'activo'");
     $stmt_carrito->execute([$id_cliente]);
     $carrito_activo = $stmt_carrito->fetch(PDO::FETCH_ASSOC);
 
@@ -46,7 +46,7 @@ try {
     $id_carrito = $carrito_activo['id_carrito'];
 
     // 2. Eliminar el item del carrito
-    $stmt_delete = $pdo->prepare("DELETE FROM DETALLE_CARRITO WHERE id_carrito = ? AND id_producto = ?");
+    $stmt_delete = $pdo->prepare("DELETE FROM detalle_carrito WHERE id_carrito = ? AND id_producto = ?");
     $stmt_delete->execute([$id_carrito, $id_producto]);
 
     $rowCount = $stmt_delete->rowCount();

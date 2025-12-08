@@ -19,7 +19,7 @@ if ($id_producto <= 0) {
 }
 
 // Verificar que el producto existe
-$stmt = $pdo->prepare("SELECT nombre FROM PRODUCTO WHERE id_producto = ?");
+$stmt = $pdo->prepare("SELECT nombre FROM producto WHERE id_producto = ?");
 $stmt->execute([$id_producto]);
 $producto = $stmt->fetch();
 
@@ -146,7 +146,7 @@ if (count($uploaded_files) > 0 || $existing_count > 0) {
     }
 
     if ($first_image) {
-        $stmt = $pdo->prepare("UPDATE PRODUCTO SET imagen = ? WHERE id_producto = ?");
+        $stmt = $pdo->prepare("UPDATE producto SET imagen = ? WHERE id_producto = ?");
         $stmt->execute([$first_image, $id_producto]);
     }
 }
@@ -156,7 +156,7 @@ if (count($uploaded_files) > 0) {
     log_actividad(
         $_SESSION['usuario_id'],
         'editar',
-        'PRODUCTO',
+        'producto',
         $id_producto,
         sprintf("Subió %d imagen(es) al producto '%s'", count($uploaded_files), $producto['nombre'])
     );

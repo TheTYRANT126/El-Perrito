@@ -36,7 +36,7 @@ try {
     
     // Insertar producto
     $stmt = $pdo->prepare("
-        INSERT INTO PRODUCTO 
+        INSERT INTO producto
         (id_categoria, nombre, descripcion, precio_venta, caducidad, es_medicamento, activo, id_usuario_creador)
         VALUES (?, ?, ?, ?, ?, ?, 1, ?)
     ");
@@ -55,7 +55,7 @@ try {
     
     // Crear registro de inventario
     $stmt = $pdo->prepare("
-        INSERT INTO INVENTARIO (id_producto, stock, stock_minimo)
+        INSERT INTO inventario (id_producto, stock, stock_minimo)
         VALUES (?, ?, ?)
     ");
     $stmt->execute([$id_producto, $stock, $stock_minimo]);
@@ -64,7 +64,7 @@ try {
     log_actividad(
         $_SESSION['usuario_id'],
         'crear',
-        'PRODUCTO',
+        'producto',
         $id_producto,
         "Creó el producto '$nombre' (ID: $id_producto)"
     );

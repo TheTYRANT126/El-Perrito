@@ -37,7 +37,7 @@ try {
     $pdo->beginTransaction();
     
     // Verificar que el cliente existe
-    $stmt = $pdo->prepare("SELECT nombre, apellido FROM CLIENTE WHERE id_cliente = ?");
+    $stmt = $pdo->prepare("SELECT nombre, apellido FROM cliente WHERE id_cliente = ?");
     $stmt->execute([$id_cliente]);
     $cliente = $stmt->fetch();
     
@@ -48,7 +48,7 @@ try {
     }
     
     // Verificar si el email ya existe en otro cliente
-    $stmt = $pdo->prepare("SELECT id_cliente FROM CLIENTE WHERE email = ? AND id_cliente != ?");
+    $stmt = $pdo->prepare("SELECT id_cliente FROM cliente WHERE email = ? AND id_cliente != ?");
     $stmt->execute([$email, $id_cliente]);
     if ($stmt->fetch()) {
         $pdo->rollBack();
@@ -56,10 +56,10 @@ try {
         echo 'El email ya está en uso';
         exit;
     }
-    
+
     // Actualizar cliente
     $stmt = $pdo->prepare("
-        UPDATE CLIENTE SET
+        UPDATE cliente SET
             nombre = ?,
             apellido = ?,
             email = ?,
@@ -74,7 +74,7 @@ try {
     log_actividad(
         $_SESSION['usuario_id'],
         'editar',
-        'CLIENTE',
+        'cliente',
         $id_cliente,
         "Modificó los datos del cliente $nombre $apellido (ID: $id_cliente)"
     );

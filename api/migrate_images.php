@@ -20,7 +20,7 @@ $errors = [];
 
 try {
     // Obtener todos los productos con imágenes
-    $stmt = $pdo->query("SELECT id_producto, imagen FROM PRODUCTO WHERE imagen IS NOT NULL AND imagen != ''");
+    $stmt = $pdo->query("SELECT id_producto, imagen FROM producto WHERE imagen IS NOT NULL AND imagen != ''");
     $productos = $stmt->fetchAll();
 
     foreach ($productos as $producto) {
@@ -87,7 +87,7 @@ try {
         // Actualizar el campo imagen en la BD con la primera imagen
         if (!empty($renamed_files)) {
             $first_image = $renamed_files[0];
-            $stmt = $pdo->prepare("UPDATE PRODUCTO SET imagen = ? WHERE id_producto = ?");
+            $stmt = $pdo->prepare("UPDATE producto SET imagen = ? WHERE id_producto = ?");
             $stmt->execute([$first_image, $id_producto]);
             echo "<p style='color: green;'>✓ Actualizado campo imagen de producto $id_producto: $first_image</p>";
         }
