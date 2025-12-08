@@ -9,6 +9,8 @@ let currentPage = {
 };
 let userRole = '';
 let userName = '';
+const isPublicContext = window.location.pathname.includes('/public/');
+const homeRedirectUrl = isPublicContext ? '../index.html' : 'index.html';
 
 // Inicialización
 (async function init() {
@@ -37,7 +39,7 @@ async function checkAdminAccess() {
 
         if (data.status !== 'admin') {
             alert('Acceso denegado. Solo personal autorizado puede acceder.');
-            window.location.href = 'index.html';
+            window.location.href = homeRedirectUrl;
             return;
         }
 

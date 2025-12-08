@@ -8,6 +8,9 @@ import { redirectIfAuthenticated } from './validConnection.js';
 const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('regForm');
 const feedbackNode = document.getElementById('msg');
+const isPublicContext = window.location.pathname.includes('/public/');
+const homePageUrl = pageUrl('index.html');
+const loginPageUrl = isPublicContext ? pageUrl('public/login.html') : pageUrl('login.html');
 
 redirectIfAuthenticated();
 
@@ -35,7 +38,7 @@ async function handleLoginSubmit(event) {
     const response = await loginUser(payload);
 
     if (response.ok && (response.body === 'OK_CLIENTE' || response.body === 'OK_ADMIN')) {
-      window.location.href = pageUrl('public/index.html');
+      window.location.href = homePageUrl;
       return;
     }
 
@@ -66,7 +69,7 @@ async function handleRegisterSubmit(event) {
     if (response.ok && response.body === 'OK') {
       showMessage(feedbackNode, 'Registro exitoso, redirigiendo...', 'success');
       setTimeout(() => {
-        window.location.href = pageUrl('public/login.html');
+        window.location.href = loginPageUrl;
       }, 1200);
       return;
     }

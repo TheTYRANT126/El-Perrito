@@ -1,5 +1,27 @@
 // Variables globales
 let currentOrderId = null;
+const isPublicContext = window.location.pathname.includes('/public/');
+const homeRedirectUrl = isPublicContext ? '../index.html' : 'index.html';
+let sessionInfoCache = null;
+
+async function getSessionInfo() {
+    if (sessionInfoCache) {
+        return sessionInfoCache;
+    }
+    try {
+        const response = await fetch('../api/session_status_improved.php', { credentials: 'include' });
+        if (response.ok) {
+            sessionInfoCache = await response.json();
+        } else {
+            sessionInfoCache = { status: 'anon' };
+        }
+    } catch {
+        sessionInfoCache = { status: 'anon' };
+    }
+    return sessionInfoCache;
+}
+
+window.getSessionInfo = getSessionInfo;
 
 // =========================
 // Funciones de Modales
@@ -24,6 +46,12 @@ function closeModal(modalId) {
 async function loadOrderHistory() {
     const historyList = document.getElementById('history-list');
     historyList.innerHTML = '<p style="text-align:center; color:#999">Cargando...</p>';
+
+    const session = await getSessionInfo();
+    if (session.status !== 'cliente') {
+        historyList.innerHTML = '<p style="text-align:center; color:#92400e">Historial disponible solo para cuentas de cliente. Usa el panel de administración para revisar pedidos.</p>';
+        return;
+    }
 
     try {
         const response = await fetch('../api/orders_list.php', { credentials: 'include' });
@@ -95,6 +123,12 @@ async function loadOrderDetail(orderId) {
     detailInfo.innerHTML = '<p style="text-align:center; color:#999">Cargando...</p>';
     detailItems.innerHTML = '';
     cancelSection.style.display = 'none';
+
+    const session = await getSessionInfo();
+    if (session.status !== 'cliente') {
+        detailInfo.innerHTML = '<p style="text-align:center; color:#92400e">Solo los clientes pueden ver el detalle de pedidos.</p>';
+        return;
+    }
 
     try {
         const response = await fetch(`../api/order_detail.php?id=${orderId}`, { credentials: 'include' });
@@ -197,6 +231,19 @@ async function cancelOrder() {
 async function loadAddresses() {
     const addressList = document.getElementById('address-list');
     addressList.innerHTML = '<p style="text-align:center; color:#999">Cargando...</p>';
+    const addButton = document.getElementById('btn-add-address');
+
+    const session = await getSessionInfo();
+    if (session.status !== 'cliente') {
+        addressList.innerHTML = '<p style="text-align:center; color:#92400e">La gestión de direcciones está disponible solo para clientes.</p>';
+        if (addButton) {
+            addButton.style.display = 'none';
+        }
+        return;
+    }
+    if (addButton) {
+        addButton.style.display = '';
+    }
 
     try {
         const response = await fetch('../api/address_list.php', { credentials: 'include' });
@@ -522,7 +569,7 @@ document.getElementById('tile-logout').addEventListener('click', async (e) => {
     e.preventDefault();
     const r = await fetch('../api/auth_logout.php', { method: 'POST', credentials: 'include' });
     if (r.ok) {
-        location.href = 'index.html';
+        location.href = homeRedirectUrl;
     } else {
         alert('Error al cerrar sesión');
     }

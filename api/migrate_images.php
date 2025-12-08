@@ -107,7 +107,7 @@ try {
         echo "<p style='color: green;'>✓ Migración completada sin errores</p>";
     }
 
-    echo "<p><a href='../public/index.html'>← Volver al inicio</a></p>";
+    echo "<p><a href='../index.html'>← Volver al inicio</a></p>";
 
 } catch (Exception $e) {
     echo "<p style='color: red;'><strong>Error:</strong> " . $e->getMessage() . "</p>";

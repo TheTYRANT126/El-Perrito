@@ -35,6 +35,23 @@ function populateYears() {
 async function loadCards() {
     const cardList = document.getElementById('card-list');
     cardList.innerHTML = '<p style="text-align:center; color:#999">Cargando...</p>';
+    const addCardBtn = document.getElementById('btn-add-card');
+
+    let session = { status: 'anon' };
+    if (typeof window.getSessionInfo === 'function') {
+        session = await window.getSessionInfo();
+    }
+
+    if (session.status !== 'cliente') {
+        cardList.innerHTML = '<p style="text-align:center; color:#92400e">La gestión de tarjetas está disponible solo para clientes.</p>';
+        if (addCardBtn) {
+            addCardBtn.style.display = 'none';
+        }
+        return;
+    }
+    if (addCardBtn) {
+        addCardBtn.style.display = '';
+    }
 
     try {
         const response = await fetch('../api/card_list.php', { credentials: 'include' });

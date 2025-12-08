@@ -1,8 +1,30 @@
-
-
+const isPublicContext = window.location.pathname.includes('/public/');
+const homeRedirectUrl = isPublicContext ? '../index.html' : 'index.html';
 const deleteForm = document.getElementById('deleteForm');
 const msg = document.getElementById('msg');
 const userEmail = document.getElementById('user-email');
+let sessionInfoCache = null;
+
+async function fetchSessionStatus() {
+    if (sessionInfoCache) {
+        return sessionInfoCache;
+    }
+
+    try {
+        const response = await fetch('../api/session_status_improved.php', {
+            credentials: 'include'
+        });
+        if (response.ok) {
+            sessionInfoCache = await response.json();
+        } else {
+            sessionInfoCache = { status: 'anon' };
+        }
+    } catch {
+        sessionInfoCache = { status: 'anon' };
+    }
+
+    return sessionInfoCache;
+}
 
 // Cargar información del usuario
 async function loadUserInfo() {
@@ -16,6 +38,14 @@ async function loadUserInfo() {
         console.log('Response status:', response.status);
 
         if (!response.ok) {
+            const session = await fetchSessionStatus();
+            if (session.status === 'admin') {
+                msg.textContent = 'Cuenta de administración, cuidado al eliminar.';
+                msg.style.color = '#b45309';
+                const fullName = `${session.nombre || ''} ${session.apellido || ''}`.trim();
+                userEmail.textContent = fullName || 'Cuenta administrativa';
+                return;
+            }
             msg.textContent = 'Error: Debes iniciar sesión';
             msg.style.color = '#d00000';
             setTimeout(() => window.location.href = 'login.html', 2000);
@@ -79,7 +109,7 @@ deleteForm.addEventListener('submit', async (e) => {
 
             // Redirigir al inicio después de 3 segundos
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = homeRedirectUrl;
             }, 3000);
         } else if (response.status === 401) {
             msg.textContent = 'Contraseña incorrecta';
